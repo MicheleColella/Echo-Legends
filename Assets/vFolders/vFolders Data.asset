@@ -84,6 +84,9 @@ MonoBehaviour:
     - 53973a8cf32b015409a2d3177dedce5b
     - 4a09a3a645891834fb9ceaa5cbc1a07a
     - 2c029c983042c408faf3c531cbd1fb0c
+    - 9e4418d57d21c4f569173d5b46237fe3
+    - b8fa0fb5119174d009587653f49f9201
+    - fefff04efd448433d991a3ba17ec0277
     values:
     - guid: 00000000000000001000000000000000
       iColor: 0
@@ -194,7 +197,7 @@ MonoBehaviour:
       iColor: 10
       autoIcon: 
       customIcon: 
-      autoIconDirty: 0
+      autoIconDirty: 1
     - guid: 329086a42c50a4d3c98d6f8b91dfd3e7
       iColor: 10
       autoIcon: 
@@ -434,4 +437,19 @@ MonoBehaviour:
       iColor: 9
       autoIcon: 
       customIcon: AssemblyDefinitionAsset Icon
+      autoIconDirty: 0
+    - guid: 9e4418d57d21c4f569173d5b46237fe3
+      iColor: 0
+      autoIcon: 
+      customIcon: cs Script Icon
+      autoIconDirty: 0
+    - guid: b8fa0fb5119174d009587653f49f9201
+      iColor: 0
+      autoIcon: 
+      customIcon: Shader Icon
+      autoIconDirty: 0
+    - guid: fefff04efd448433d991a3ba17ec0277
+      iColor: 0
+      autoIcon: Material Icon
+      customIcon: 
       autoIconDirty: 0
