@@ -35,18 +35,35 @@ namespace KinematicCharacterController.Examples
 
         private void Start()
         {
-            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.lockState = CursorLockMode.None; // Non bloccare il cursore
+            Cursor.visible = true; // Assicura che il cursore sia visibile
         }
 
         private void Update()
         {
-            if (Mouse.current.leftButton.wasPressedThisFrame)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-
             HandleCharacterInput();
+            HandleRaycast(); // Aggiungi la chiamata a HandleRaycast qui
         }
+
+        private void HandleRaycast()
+        {
+            Vector3 mousePosition = Mouse.current.position.ReadValue();
+            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                Vector3 hitPosition = hit.point;
+
+                hitPosition.y = 0;
+
+                Debug.Log("Raycast Position: " + hitPosition);
+
+                // Pass the raycast position to the character
+                Character.SetRaycastPosition(hitPosition);
+            }
+        }
+
 
         private void HandleCharacterInput()
         {
