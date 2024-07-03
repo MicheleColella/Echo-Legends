@@ -971,6 +971,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Character: {fileID: 80743938}
   floatingJoystick: {fileID: 2050949227}
+  rightStickJoystick: {fileID: 2073895543}
+  useMouseAndKeyboard: 1
+  useGamepad: 1
+  useVirtualJoysticks: 0
 --- !u!4 &632246490
 Transform:
   m_ObjectHideFlags: 0
@@ -2349,6 +2353,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1926397720}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2073895543 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8170153791668043265, guid: 0d230cc8be529a542a08cb878ab14b18,
+    type: 3}
+  m_PrefabInstance: {fileID: 1926397720}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a47f546fc70ec8428172694e78e4288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2089494199
 GameObject:
   m_ObjectHideFlags: 0

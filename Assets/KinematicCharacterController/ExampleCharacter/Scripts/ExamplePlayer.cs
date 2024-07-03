@@ -10,12 +10,19 @@ namespace KinematicCharacterController.Examples
     public class ExamplePlayer : MonoBehaviour
     {
         public ExampleCharacterController Character;
-        public FloatingJoystick floatingJoystick; // Riferimento al joystick
+        public FloatingJoystick floatingJoystick; // Riferimento al joystick sinistro
+        public FloatingJoystick rightStickJoystick; // Riferimento al joystick destro
+
+        public bool useMouseAndKeyboard = true;
+        public bool useGamepad = true;
+        public bool useVirtualJoysticks = true;
 
         private InputActions playerInputActions;
         private Vector2 keyboardMoveInput;
         private Vector2 lookInput;
         private bool isUsingGamepad;
+        private bool isUsingVirtualJoystick;
+        private bool isUsingMouse;
 
         private void Awake()
         {
@@ -48,13 +55,24 @@ namespace KinematicCharacterController.Examples
 
         private void Update()
         {
-            HandleCharacterInput();
+            if (useVirtualJoysticks)
+            {
+                HandleCharacterInputWithJoysticks();
+            }
+            else
+            {
+                HandleCharacterInput();
+            }
 
-            if (isUsingGamepad)
+            if (isUsingGamepad && useGamepad)
             {
                 HandleRotation();
             }
-            else
+            else if (isUsingVirtualJoystick && useVirtualJoysticks)
+            {
+                HandleRotation();
+            }
+            else if (isUsingMouse && useMouseAndKeyboard)
             {
                 HandleRaycast();
             }
@@ -83,7 +101,7 @@ namespace KinematicCharacterController.Examples
         {
             if (lookInput.sqrMagnitude > 0.01f)
             {
-                // Calcola l'angolo di rotazione basato sull'input della levetta destra
+                // Calcola l'angolo di rotazione basato sull'input del look
                 float targetAngle = Mathf.Atan2(lookInput.x, lookInput.y) * Mathf.Rad2Deg;
                 Character.SetLookAngle(targetAngle);
             }
@@ -91,11 +109,28 @@ namespace KinematicCharacterController.Examples
 
         private void HandleCharacterInput()
         {
+            if (!useMouseAndKeyboard)
+            {
+                return;
+            }
+
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
             Vector2 moveInput = keyboardMoveInput;
 
-            // Aggiungi l'input del joystick virtuale se è assegnato
-            if (floatingJoystick != null)
+            characterInputs.MoveAxisForward = moveInput.y;
+            characterInputs.MoveAxisRight = moveInput.x;
+            characterInputs.CameraRotation = Camera.main.transform.rotation;
+
+            Character.SetInputs(ref characterInputs);
+        }
+
+        private void HandleCharacterInputWithJoysticks()
+        {
+            PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
+            Vector2 moveInput = keyboardMoveInput;
+
+            // Aggiungi l'input del joystick sinistro se è assegnato e abilitato
+            if (useVirtualJoysticks && floatingJoystick != null)
             {
                 moveInput += new Vector2(floatingJoystick.Horizontal, floatingJoystick.Vertical);
             }
@@ -109,26 +144,50 @@ namespace KinematicCharacterController.Examples
 
         private void OnMove(InputAction.CallbackContext context)
         {
-            keyboardMoveInput = context.ReadValue<Vector2>();
-            if (context.control.device is Gamepad)
+            if (useMouseAndKeyboard)
+            {
+                keyboardMoveInput = context.ReadValue<Vector2>();
+            }
+            if (context.control.device is Gamepad && useGamepad)
             {
                 isUsingGamepad = true;
+                isUsingMouse = false;
+                isUsingVirtualJoystick = false;
                 Character.SetIsUsingGamepad(true);
             }
         }
 
         private void OnLook(InputAction.CallbackContext context)
         {
-            lookInput = context.ReadValue<Vector2>();
-            if (context.control.device is Gamepad)
+            Vector2 input = context.ReadValue<Vector2>();
+
+            if (context.control.device is Gamepad && useGamepad)
             {
                 isUsingGamepad = true;
+                isUsingMouse = false;
+                isUsingVirtualJoystick = false;
+                lookInput = input;
                 Character.SetIsUsingGamepad(true);
             }
-            else
+            else if (useMouseAndKeyboard)
             {
+                isUsingMouse = true;
                 isUsingGamepad = false;
+                isUsingVirtualJoystick = false;
+                lookInput = input;
                 Character.SetIsUsingGamepad(false);
+            }
+        }
+
+        private void LateUpdate()
+        {
+            // Controlla l'input del joystick virtuale destro
+            if (useVirtualJoysticks && rightStickJoystick != null && (rightStickJoystick.Horizontal != 0 || rightStickJoystick.Vertical != 0))
+            {
+                isUsingVirtualJoystick = true;
+                isUsingGamepad = false;
+                isUsingMouse = false;
+                lookInput = new Vector2(rightStickJoystick.Horizontal, rightStickJoystick.Vertical);
             }
         }
     }
