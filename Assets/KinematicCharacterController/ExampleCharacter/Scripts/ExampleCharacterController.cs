@@ -44,6 +44,9 @@ namespace KinematicCharacterController.Examples
     {
         public KinematicCharacterMotor Motor;
         private Vector3 _raycastPosition = Vector3.zero;
+        private bool _isUsingRaycast = true;
+        private float _gamepadLookAngle = 0f;
+        private bool _isGamepadLookActive = false;
 
         [Header("Stable Movement")]
         public float MaxStableMoveSpeed = 10f;
@@ -138,9 +141,75 @@ namespace KinematicCharacterController.Examples
             }
         }
 
+        public void SetLookAngle(float angle)
+        {
+            _gamepadLookAngle = angle;
+            _isGamepadLookActive = true;
+            _isUsingRaycast = false; // Disattiva l'uso del raycast quando si utilizza il gamepad
+        }
+
         public void SetRaycastPosition(Vector3 position)
         {
-            _raycastPosition = position;
+            if (_isUsingRaycast)
+            {
+                _raycastPosition = position;
+            }
+        }
+
+        public void ResetLookDirection()
+        {
+            _isUsingRaycast = true; // Riattiva l'uso del raycast quando si utilizza il mouse
+            _isGamepadLookActive = false;
+        }
+
+        public void SetIsUsingGamepad(bool isUsingGamepad)
+        {
+            _isGamepadLookActive = isUsingGamepad;
+            _isUsingRaycast = !isUsingGamepad;
+        }
+
+        public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
+        {
+            if (_isGamepadLookActive)
+            {
+                UpdateRotationWithGamepad(ref currentRotation, deltaTime);
+            }
+            else if (_isUsingRaycast)
+            {
+                UpdateRotationWithMouse(ref currentRotation, deltaTime);
+            }
+        }
+
+        private void UpdateRotationWithGamepad(ref Quaternion currentRotation, float deltaTime)
+        {
+            // Rotazione basata sull'input del gamepad
+            Debug.Log($"Is Using Gamepad");
+            Quaternion targetRotation = Quaternion.Euler(0, _gamepadLookAngle, 0);
+            currentRotation = Quaternion.Slerp(currentRotation, targetRotation, deltaTime * OrientationSharpness);
+            Debug.Log($"Look Input: {currentRotation}");
+        }
+
+        private void UpdateRotationWithMouse(ref Quaternion currentRotation, float deltaTime)
+        {
+            Debug.Log($"Is Mouse Active");
+            switch (CurrentCharacterState)
+            {
+                case CharacterState.Default:
+                    {
+                        Vector3 directionToRaycast = _raycastPosition - Motor.TransientPosition;
+                        directionToRaycast.y = 0; // Mantieni solo la rotazione sull'asse Y
+
+                        if (directionToRaycast.sqrMagnitude > 0f)
+                        {
+                            // Rotazione verso la posizione del Raycast
+                            Quaternion targetRotation = Quaternion.LookRotation(directionToRaycast);
+                            Debug.Log("Raycast Position: " + targetRotation);
+                            currentRotation = Quaternion.Slerp(currentRotation, targetRotation, deltaTime * OrientationSharpness);
+                        }
+
+                        break;
+                    }
+            }
         }
 
         /// <summary>
@@ -229,28 +298,7 @@ namespace KinematicCharacterController.Examples
         /// This is where you tell your character what its rotation should be right now. 
         /// This is the ONLY place where you should set the character's rotation
         /// </summary>
-        public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
-        {
-            switch (CurrentCharacterState)
-            {
-                case CharacterState.Default:
-                    {
-                        Vector3 directionToRaycast = _raycastPosition - Motor.TransientPosition;
-                        directionToRaycast.y = 0; // Mantieni solo la rotazione sull'asse Y
-
-                        if (directionToRaycast.sqrMagnitude > 0f)
-                        {
-                            // Rotazione verso la posizione del Raycast
-                            Quaternion targetRotation = Quaternion.LookRotation(directionToRaycast);
-                            currentRotation = Quaternion.Slerp(currentRotation, targetRotation, deltaTime * OrientationSharpness);
-                        }
-
-                        break;
-                    }
-            }
-        }
-
-
+       
 
         /// <summary>
         /// (Called by KinematicCharacterMotor during its update cycle)

@@ -13,6 +13,8 @@ namespace KinematicCharacterController.Examples
 
         private InputActions playerInputActions;
         private Vector2 moveInput;
+        private Vector2 lookInput;
+        private bool isUsingGamepad;
 
         private void Awake()
         {
@@ -24,6 +26,8 @@ namespace KinematicCharacterController.Examples
             playerInputActions.Player.Enable();
             playerInputActions.Player.Move.performed += OnMove;
             playerInputActions.Player.Move.canceled += OnMove;
+            playerInputActions.Player.Look.performed += OnLook;
+            playerInputActions.Player.Look.canceled += OnLook;
         }
 
         private void OnDisable()
@@ -31,6 +35,8 @@ namespace KinematicCharacterController.Examples
             playerInputActions.Player.Disable();
             playerInputActions.Player.Move.performed -= OnMove;
             playerInputActions.Player.Move.canceled -= OnMove;
+            playerInputActions.Player.Look.performed -= OnLook;
+            playerInputActions.Player.Look.canceled -= OnLook;
         }
 
         private void Start()
@@ -42,35 +48,52 @@ namespace KinematicCharacterController.Examples
         private void Update()
         {
             HandleCharacterInput();
-            HandleRaycast(); // Aggiungi la chiamata a HandleRaycast qui
+
+            if (isUsingGamepad)
+            {
+                HandleRotation();
+            }
+            else
+            {
+                HandleRaycast();
+            }
         }
 
         private void HandleRaycast()
         {
-            Vector3 mousePosition = Mouse.current.position.ReadValue();
-            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
+            if (Mouse.current != null)
             {
-                Vector3 hitPosition = hit.point;
+                Vector3 mousePosition = Mouse.current.position.ReadValue();
+                Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+                RaycastHit hit;
 
-                hitPosition.y = 0;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Vector3 hitPosition = hit.point;
+                    hitPosition.y = 0;
 
-                Debug.Log("Raycast Position: " + hitPosition);
-
-                // Pass the raycast position to the character
-                Character.SetRaycastPosition(hitPosition);
+                    // Pass the raycast position to the character
+                    Character.SetRaycastPosition(hitPosition);
+                }
             }
         }
 
+        private void HandleRotation()
+        {
+            if (lookInput.sqrMagnitude > 0.01f)
+            {
+                // Calcola l'angolo di rotazione basato sull'input della levetta destra
+                float targetAngle = Mathf.Atan2(lookInput.x, lookInput.y) * Mathf.Rad2Deg;
+                Character.SetLookAngle(targetAngle);
+            }
+        }
 
         private void HandleCharacterInput()
         {
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
-
             characterInputs.MoveAxisForward = moveInput.y;
             characterInputs.MoveAxisRight = moveInput.x;
+            characterInputs.CameraRotation = Camera.main.transform.rotation;
 
             Character.SetInputs(ref characterInputs);
         }
@@ -78,6 +101,26 @@ namespace KinematicCharacterController.Examples
         private void OnMove(InputAction.CallbackContext context)
         {
             moveInput = context.ReadValue<Vector2>();
+            if (context.control.device is Gamepad)
+            {
+                isUsingGamepad = true;
+                Character.SetIsUsingGamepad(true);
+            }
+        }
+
+        private void OnLook(InputAction.CallbackContext context)
+        {
+            lookInput = context.ReadValue<Vector2>();
+            if (context.control.device is Gamepad)
+            {
+                isUsingGamepad = true;
+                Character.SetIsUsingGamepad(true);
+            }
+            else
+            {
+                isUsingGamepad = false;
+                Character.SetIsUsingGamepad(false);
+            }
         }
     }
 }
