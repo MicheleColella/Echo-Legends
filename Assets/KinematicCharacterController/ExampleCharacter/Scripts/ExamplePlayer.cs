@@ -10,9 +10,10 @@ namespace KinematicCharacterController.Examples
     public class ExamplePlayer : MonoBehaviour
     {
         public ExampleCharacterController Character;
+        public FloatingJoystick floatingJoystick; // Riferimento al joystick
 
         private InputActions playerInputActions;
-        private Vector2 moveInput;
+        private Vector2 keyboardMoveInput;
         private Vector2 lookInput;
         private bool isUsingGamepad;
 
@@ -91,6 +92,14 @@ namespace KinematicCharacterController.Examples
         private void HandleCharacterInput()
         {
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
+            Vector2 moveInput = keyboardMoveInput;
+
+            // Aggiungi l'input del joystick virtuale se è assegnato
+            if (floatingJoystick != null)
+            {
+                moveInput += new Vector2(floatingJoystick.Horizontal, floatingJoystick.Vertical);
+            }
+
             characterInputs.MoveAxisForward = moveInput.y;
             characterInputs.MoveAxisRight = moveInput.x;
             characterInputs.CameraRotation = Camera.main.transform.rotation;
@@ -100,7 +109,7 @@ namespace KinematicCharacterController.Examples
 
         private void OnMove(InputAction.CallbackContext context)
         {
-            moveInput = context.ReadValue<Vector2>();
+            keyboardMoveInput = context.ReadValue<Vector2>();
             if (context.control.device is Gamepad)
             {
                 isUsingGamepad = true;
