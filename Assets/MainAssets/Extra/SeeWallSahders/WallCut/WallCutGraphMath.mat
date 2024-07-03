@@ -57,9 +57,9 @@ Material:
     - _Opacity: 1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Size: 0.009423508
+    - _Size: 0
     - _Smoothness: 0.299
     m_Colors:
-    - _Position: {r: 0.53285956, g: 0.43802008, b: 23.253881, a: 0}
+    - _Position: {r: 0.5024827, g: 0.47364286, b: 24.175737, a: 0}
     - _Tint: {r: 1, g: 0.25943398, b: 0.25943398, a: 0}
   m_BuildTextureStacks: []
