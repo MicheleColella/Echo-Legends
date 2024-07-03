@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 80743938}
   - component: {fileID: 80743940}
   - component: {fileID: 80743942}
+  - component: {fileID: 80743943}
   m_Layer: 9
   m_Name: ExampleCharacter
   m_TagString: Untagged
@@ -285,6 +286,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &80743943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 80743937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7a70b2dbbbce459c9235ff9e7f50f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallMaterial: {fileID: 2100000, guid: 66f118702b9f44181b40aad185a16f39, type: 2}
+  Camera: {fileID: 330585545}
+  Mask:
+    serializedVersion: 2
+    m_Bits: 1048576
+  transitionSpeed: 3
+  offset: {x: 0, y: 0.05, z: 0}
 --- !u!1 &300364328
 GameObject:
   m_ObjectHideFlags: 0
@@ -297,7 +317,7 @@ GameObject:
   - component: {fileID: 300364332}
   - component: {fileID: 300364331}
   - component: {fileID: 300364330}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: WallCorner1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -360,7 +380,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6af20d21fdb3e9846be9fcc5368045e6, type: 2}
+  - {fileID: 2100000, guid: 66f118702b9f44181b40aad185a16f39, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1042,7 +1062,7 @@ GameObject:
   - component: {fileID: 928229243}
   - component: {fileID: 928229242}
   - component: {fileID: 928229241}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: WallCorner4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1105,7 +1125,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6af20d21fdb3e9846be9fcc5368045e6, type: 2}
+  - {fileID: 2100000, guid: 66f118702b9f44181b40aad185a16f39, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1147,7 +1167,7 @@ GameObject:
   - component: {fileID: 965889181}
   - component: {fileID: 965889180}
   - component: {fileID: 965889179}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1195,7 +1215,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6af20d21fdb3e9846be9fcc5368045e6, type: 2}
+  - {fileID: 2100000, guid: 66f118702b9f44181b40aad185a16f39, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1335,7 +1355,7 @@ GameObject:
   - component: {fileID: 1286986633}
   - component: {fileID: 1286986632}
   - component: {fileID: 1286986631}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: WallCorner2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1398,7 +1418,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6af20d21fdb3e9846be9fcc5368045e6, type: 2}
+  - {fileID: 2100000, guid: 66f118702b9f44181b40aad185a16f39, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1607,7 +1627,7 @@ GameObject:
   - component: {fileID: 1500051077}
   - component: {fileID: 1500051076}
   - component: {fileID: 1500051075}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: WallCorner3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1670,7 +1690,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6af20d21fdb3e9846be9fcc5368045e6, type: 2}
+  - {fileID: 2100000, guid: 66f118702b9f44181b40aad185a16f39, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
