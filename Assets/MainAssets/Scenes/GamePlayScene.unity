@@ -974,7 +974,7 @@ MonoBehaviour:
   rightStickJoystick: {fileID: 2073895543}
   useMouseAndKeyboard: 1
   useGamepad: 1
-  useVirtualJoysticks: 0
+  useVirtualJoysticks: 1
 --- !u!4 &632246490
 Transform:
   m_ObjectHideFlags: 0
