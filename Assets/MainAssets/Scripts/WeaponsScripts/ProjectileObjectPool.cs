@@ -6,50 +6,51 @@ public class ProjectileObjectPool : MonoBehaviour
     [System.Serializable]
     public class Pool
     {
-        public string tag;
         public GameObject prefab;
+        public int initialSize;
     }
 
     public List<Pool> pools;
-    private Dictionary<string, Queue<GameObject>> poolDictionary;
+    private Dictionary<GameObject, Queue<GameObject>> poolDictionary;
 
     void Awake()
     {
-        poolDictionary = new Dictionary<string, Queue<GameObject>>();
+        poolDictionary = new Dictionary<GameObject, Queue<GameObject>>();
         foreach (Pool pool in pools)
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
-            poolDictionary.Add(pool.tag, objectPool);
+
+            for (int i = 0; i < pool.initialSize; i++)
+            {
+                GameObject obj = Instantiate(pool.prefab);
+                obj.SetActive(false);
+                objectPool.Enqueue(obj);
+            }
+
+            poolDictionary.Add(pool.prefab, objectPool);
         }
     }
 
-    public GameObject GetObject(string tag)
+    public GameObject GetObject(GameObject prefab)
     {
-        if (!poolDictionary.ContainsKey(tag))
+        if (!poolDictionary.ContainsKey(prefab))
         {
-            Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
+            Debug.LogWarning("Pool with prefab " + prefab.name + " doesn't exist.");
             return null;
         }
 
-        if (poolDictionary[tag].Count > 0 && !poolDictionary[tag].Peek().activeInHierarchy)
+        if (poolDictionary[prefab].Count > 0 && !poolDictionary[prefab].Peek().activeInHierarchy)
         {
-            GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+            GameObject objectToSpawn = poolDictionary[prefab].Dequeue();
             objectToSpawn.SetActive(true);
-            poolDictionary[tag].Enqueue(objectToSpawn);
+            poolDictionary[prefab].Enqueue(objectToSpawn);
             return objectToSpawn;
         }
         else
         {
-            Pool pool = pools.Find(p => p.tag == tag);
-            if (pool == null)
-            {
-                Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
-                return null;
-            }
-
-            GameObject newObj = Instantiate(pool.prefab);
+            GameObject newObj = Instantiate(prefab);
             newObj.SetActive(false);
-            poolDictionary[tag].Enqueue(newObj);
+            poolDictionary[prefab].Enqueue(newObj);
             return newObj;
         }
     }

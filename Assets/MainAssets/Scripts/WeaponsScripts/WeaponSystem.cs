@@ -48,7 +48,7 @@ public class WeaponSystem : MonoBehaviour
                     continue;
                 }
 
-                GameObject projectileObject = projectilePool.GetObject(currentWeapon.projectilePrefab.tag);
+                GameObject projectileObject = projectilePool.GetObject(currentWeapon.projectilePrefab);
                 if (projectileObject == null)
                 {
                     Debug.LogError("Non è stato possibile ottenere un proiettile dal pool.");

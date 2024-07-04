@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -1875389450557057543}
   - component: {fileID: -6109185300782387402}
   m_Layer: 18
-  m_Name: SampleProjectile
+  m_Name: SampleProjectile2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -146,5 +146,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c71b3bc10324a048e194ff4c2eea5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageRange: {x: 4, y: 8}
-  lifeTime: 2
+  damageRange: {x: 2, y: 4}
+  lifeTime: 4
