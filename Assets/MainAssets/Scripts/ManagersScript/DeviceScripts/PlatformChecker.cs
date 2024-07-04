@@ -9,13 +9,11 @@ public class PlatformChecker : MonoBehaviour
 
     void Awake()
     {
+        // Controlla la piattaforma subito
+        CheckPlatform();
+
         // Assicurati che l'oggetto non venga distrutto durante le transizioni di scena
         DontDestroyOnLoad(gameObject);
-    }
-
-    void Start()
-    {
-        CheckPlatform();
     }
 
     void CheckPlatform()

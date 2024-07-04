@@ -27,6 +27,29 @@ namespace KinematicCharacterController.Examples
         private void Awake()
         {
             playerInputActions = new InputActions();
+
+            if (PlatformChecker.isPC)
+            {
+                useMouseAndKeyboard = true;
+                useGamepad = true;
+                useVirtualJoysticks = false;
+            }
+            else if (PlatformChecker.isMobile)
+            {
+                useMouseAndKeyboard = false;
+                useGamepad = false;
+                useVirtualJoysticks = true;
+            }
+            else if (PlatformChecker.isEditor)
+            {
+                useMouseAndKeyboard = true;
+                useGamepad = true;
+                useVirtualJoysticks = false;
+            }
+            else
+            {
+                Debug.Log("Piattaforma non riconoscita");
+            }
         }
 
         private void OnEnable()
@@ -51,6 +74,7 @@ namespace KinematicCharacterController.Examples
         {
             Cursor.lockState = CursorLockMode.None; // Non bloccare il cursore
             Cursor.visible = true; // Assicura che il cursore sia visibile
+
         }
 
         private void Update()

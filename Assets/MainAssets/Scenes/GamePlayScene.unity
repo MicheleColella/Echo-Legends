@@ -1959,6 +1959,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1837451987}
   - component: {fileID: 1837451988}
+  - component: {fileID: 1837451989}
   m_Layer: 0
   m_Name: GameManagers
   m_TagString: Untagged
@@ -1993,6 +1994,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 297636e81484b4d87bfbd21d9b7c04b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1837451989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837451986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c522e67e7a82449f9c6c6620de64fbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mobileObjects:
+  - {fileID: 1736739668}
+  pcObjects: []
 --- !u!1001 &1926397720
 PrefabInstance:
   m_ObjectHideFlags: 0
