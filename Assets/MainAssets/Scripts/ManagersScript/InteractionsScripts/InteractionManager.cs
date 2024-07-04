@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 public class InteractionManager : MonoBehaviour
 {
@@ -8,12 +9,26 @@ public class InteractionManager : MonoBehaviour
     private InteractableObject nearestObject;
     private Vector3 playerPosition;
 
+    private InputActions inputActions;
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            inputActions = new InputActions();
+
+            if (PlatformChecker.isPC || PlatformChecker.isEditor)
+            {
+                inputActions.Player.Interact.performed += ctx => InteractWithNearestObject();
+            }
+            else if (PlatformChecker.isMobile)
+            {
+                // Configurare il pulsante UI per l'interazione
+                MobileInteractButton.OnInteractButtonPressed += InteractWithNearestObject;
+            }
         }
         else
         {
@@ -21,20 +36,33 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        inputActions.Player.Enable();
+        if (PlatformChecker.isMobile)
+        {
+            MobileInteractButton.OnInteractButtonPressed += InteractWithNearestObject;
+        }
+    }
+
+    private void OnDisable()
+    {
+        inputActions.Player.Disable();
+        if (PlatformChecker.isMobile)
+        {
+            MobileInteractButton.OnInteractButtonPressed -= InteractWithNearestObject;
+        }
+    }
+
     public void UpdatePlayerPosition(Vector3 newPosition)
     {
         playerPosition = newPosition;
-        //Debug.Log("Updated player position: " + playerPosition);
+        // Debug.Log("Updated player position: " + playerPosition);
     }
 
     private void Update()
     {
         UpdateNearestObject();
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            InteractWithNearestObject();
-        }
     }
 
     public void RegisterInteractable(InteractableObject interactable)
@@ -42,7 +70,7 @@ public class InteractionManager : MonoBehaviour
         if (!interactableObjects.Contains(interactable))
         {
             interactableObjects.Add(interactable);
-            //Debug.Log("Registered interactable: " + interactable.gameObject.name);
+            // Debug.Log("Registered interactable: " + interactable.gameObject.name);
         }
     }
 
@@ -51,7 +79,7 @@ public class InteractionManager : MonoBehaviour
         if (interactableObjects.Contains(interactable))
         {
             interactableObjects.Remove(interactable);
-            //Debug.Log("Unregistered interactable: " + interactable.gameObject.name);
+            // Debug.Log("Unregistered interactable: " + interactable.gameObject.name);
         }
     }
 
@@ -82,7 +110,7 @@ public class InteractionManager : MonoBehaviour
 
         if (nearestObject != null)
         {
-            //Debug.Log("Nearest object: " + nearestObject.gameObject.name);
+            // Debug.Log("Nearest object: " + nearestObject.gameObject.name);
         }
     }
 
