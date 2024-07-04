@@ -48,7 +48,6 @@ public class WeaponSystem : MonoBehaviour
                     continue;
                 }
 
-                Debug.Log("Fetching projectile from pool with tag: " + currentWeapon.projectilePrefab.tag);
                 GameObject projectileObject = projectilePool.GetObject(currentWeapon.projectilePrefab.tag);
                 if (projectileObject == null)
                 {
@@ -56,7 +55,6 @@ public class WeaponSystem : MonoBehaviour
                     continue;
                 }
 
-                Debug.Log("Projectile fetched successfully");
                 projectileObject.transform.position = firePoint.position;
                 projectileObject.transform.rotation = Quaternion.LookRotation(direction);
                 projectileObject.SetActive(true);
@@ -81,7 +79,6 @@ public class WeaponSystem : MonoBehaviour
             }
         }
     }
-
 
     float CalculateSpreadAngle(int index, int totalProjectiles, float spreadAngle)
     {

@@ -1564,10 +1564,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - tag: Fire
+  - tag: SampleProjectile
     prefab: {fileID: 3461241929686397981, guid: a52521dee5ae24ab4a04c5e14526af97,
       type: 3}
-    size: 10
 --- !u!1 &928229239
 GameObject:
   m_ObjectHideFlags: 0

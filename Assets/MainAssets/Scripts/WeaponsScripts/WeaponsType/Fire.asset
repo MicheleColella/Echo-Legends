@@ -18,5 +18,5 @@ MonoBehaviour:
   projectilePrefab: {fileID: 3461241929686397981, guid: a52521dee5ae24ab4a04c5e14526af97,
     type: 3}
   projectileSpeed: 30
-  projectilesPerShot: 20
-  spreadAngle: 145
+  projectilesPerShot: 1
+  spreadAngle: 0

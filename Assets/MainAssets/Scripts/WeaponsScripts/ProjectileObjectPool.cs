@@ -8,27 +8,17 @@ public class ProjectileObjectPool : MonoBehaviour
     {
         public string tag;
         public GameObject prefab;
-        public int size;
     }
 
     public List<Pool> pools;
-    public Dictionary<string, Queue<GameObject>> poolDictionary;
+    private Dictionary<string, Queue<GameObject>> poolDictionary;
 
     void Awake()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
-
         foreach (Pool pool in pools)
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
-
-            for (int i = 0; i < pool.size; i++)
-            {
-                GameObject obj = Instantiate(pool.prefab);
-                obj.SetActive(false);
-                objectPool.Enqueue(obj);
-            }
-
             poolDictionary.Add(pool.tag, objectPool);
         }
     }
@@ -41,19 +31,27 @@ public class ProjectileObjectPool : MonoBehaviour
             return null;
         }
 
-        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
-
-        if (objectToSpawn.activeInHierarchy)
+        if (poolDictionary[tag].Count > 0 && !poolDictionary[tag].Peek().activeInHierarchy)
         {
-            GameObject newObj = Instantiate(objectToSpawn);
+            GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+            objectToSpawn.SetActive(true);
+            poolDictionary[tag].Enqueue(objectToSpawn);
+            return objectToSpawn;
+        }
+        else
+        {
+            Pool pool = pools.Find(p => p.tag == tag);
+            if (pool == null)
+            {
+                Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
+                return null;
+            }
+
+            GameObject newObj = Instantiate(pool.prefab);
             newObj.SetActive(false);
             poolDictionary[tag].Enqueue(newObj);
             return newObj;
         }
-
-        poolDictionary[tag].Enqueue(objectToSpawn);
-
-        return objectToSpawn;
     }
 
     public void ReturnObject(GameObject obj)
