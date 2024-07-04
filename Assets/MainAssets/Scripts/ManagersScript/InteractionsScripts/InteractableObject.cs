@@ -4,6 +4,8 @@ public class InteractableObject : MonoBehaviour
 {
     public float interactionRange = 3f;
     public GameObject childObject;
+    public bool disactiveBillBoard = false;
+    private bool hasInteracted = false;
 
     private void Start()
     {
@@ -18,7 +20,19 @@ public class InteractableObject : MonoBehaviour
 
     public void Interact()
     {
+        if (disactiveBillBoard && hasInteracted) return;
+
         //Debug.Log("Interacted with " + gameObject.name);
+
+        if (disactiveBillBoard)
+        {
+            hasInteracted = true;
+            if (childObject != null)
+            {
+                childObject.SetActive(false);
+            }
+        }
+
         var handler = GetComponent<ExampleInteractionHandler>();
         if (handler != null)
         {
@@ -28,7 +42,7 @@ public class InteractableObject : MonoBehaviour
 
     public void SetChildActive(bool isActive)
     {
-        if (childObject != null)
+        if (childObject != null && (!hasInteracted || !disactiveBillBoard))
         {
             childObject.SetActive(isActive);
         }
