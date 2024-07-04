@@ -1,3 +1,4 @@
+// InteractableObject.cs
 using UnityEngine;
 
 public class InteractableObject : MonoBehaviour
@@ -33,7 +34,7 @@ public class InteractableObject : MonoBehaviour
             }
         }
 
-        var handler = GetComponent<ExampleInteractionHandler>();
+        var handler = GetComponent<IInteractionHandler>();
         if (handler != null)
         {
             handler.HandleInteraction(this);
