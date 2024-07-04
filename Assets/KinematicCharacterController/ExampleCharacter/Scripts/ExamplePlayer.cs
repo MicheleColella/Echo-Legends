@@ -4,11 +4,13 @@ using UnityEngine;
 using KinematicCharacterController;
 using KinematicCharacterController.Examples;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace KinematicCharacterController.Examples
 {
     public class ExamplePlayer : MonoBehaviour
     {
+        public GameObject Player;
         public ExampleCharacterController Character;
         public FloatingJoystick floatingJoystick; // Riferimento al joystick sinistro
         public FloatingJoystick rightStickJoystick; // Riferimento al joystick destro
@@ -74,11 +76,12 @@ namespace KinematicCharacterController.Examples
         {
             Cursor.lockState = CursorLockMode.None; // Non bloccare il cursore
             Cursor.visible = true; // Assicura che il cursore sia visibile
-
         }
 
         private void Update()
         {
+            InteractionManager.Instance.UpdatePlayerPosition(Player.transform.position);
+
             if (useVirtualJoysticks)
             {
                 HandleCharacterInputWithJoysticks();
@@ -101,6 +104,8 @@ namespace KinematicCharacterController.Examples
                 HandleRaycast();
             }
         }
+
+
 
         private void HandleRaycast()
         {

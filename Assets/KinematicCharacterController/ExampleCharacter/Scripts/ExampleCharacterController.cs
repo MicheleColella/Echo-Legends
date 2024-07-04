@@ -186,12 +186,12 @@ namespace KinematicCharacterController.Examples
             Debug.Log($"Is Using Gamepad");
             Quaternion targetRotation = Quaternion.Euler(0, _gamepadLookAngle, 0);
             currentRotation = Quaternion.Slerp(currentRotation, targetRotation, deltaTime * OrientationSharpness);
-            Debug.Log($"Look Input: {currentRotation}");
+            //Debug.Log($"Look Input: {currentRotation}");
         }
 
         private void UpdateRotationWithMouse(ref Quaternion currentRotation, float deltaTime)
         {
-            Debug.Log($"Is Mouse Active");
+            //Debug.Log($"Is Mouse Active");
             switch (CurrentCharacterState)
             {
                 case CharacterState.Default:
@@ -203,7 +203,7 @@ namespace KinematicCharacterController.Examples
                         {
                             // Rotazione verso la posizione del Raycast
                             Quaternion targetRotation = Quaternion.LookRotation(directionToRaycast);
-                            Debug.Log("Raycast Position: " + targetRotation);
+                            //Debug.Log("Raycast Position: " + targetRotation);
                             currentRotation = Quaternion.Slerp(currentRotation, targetRotation, deltaTime * OrientationSharpness);
                         }
 
