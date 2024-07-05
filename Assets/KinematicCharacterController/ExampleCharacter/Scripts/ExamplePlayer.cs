@@ -145,15 +145,14 @@ namespace KinematicCharacterController.Examples
 
         private void HandleCharacterInput()
         {
-            if (currentState != InputState.MouseAndKeyboard && currentState != InputState.Gamepad)
-            {
-                return;
-            }
-
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
-            Vector2 moveInput = keyboardMoveInput;
+            Vector2 moveInput = Vector2.zero;
 
-            if (currentState == InputState.Gamepad)
+            if (currentState == InputState.MouseAndKeyboard)
+            {
+                moveInput = keyboardMoveInput;
+            }
+            else if (currentState == InputState.Gamepad)
             {
                 moveInput = Gamepad.current.leftStick.ReadValue();
             }
@@ -184,7 +183,7 @@ namespace KinematicCharacterController.Examples
 
         private void OnMove(InputAction.CallbackContext context)
         {
-            if (currentState == InputState.MouseAndKeyboard && context.control.device is Mouse)
+            if (currentState == InputState.MouseAndKeyboard && context.control.device is Keyboard)
             {
                 keyboardMoveInput = context.ReadValue<Vector2>();
             }

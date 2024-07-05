@@ -50,7 +50,11 @@ public class BillboardInteraction : MonoBehaviour
             return; // No need to check input on mobile, it's always using mobile sprite.
         }
 
-        if (Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame)
+        bool gamepadActive = Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame;
+        bool keyboardActive = Keyboard.current != null && Keyboard.current.wasUpdatedThisFrame;
+        bool mouseActive = Mouse.current != null && Mouse.current.wasUpdatedThisFrame;
+
+        if (gamepadActive)
         {
             if (!isUsingGamepad)
             {
@@ -59,17 +63,13 @@ public class BillboardInteraction : MonoBehaviour
                 UpdateSprite(gamepadSprite);
             }
         }
-        else if (Gamepad.current == null || !Gamepad.current.wasUpdatedThisFrame)
+        else if (keyboardActive || mouseActive)
         {
-            if ((Keyboard.current != null && Keyboard.current.wasUpdatedThisFrame) ||
-                (Mouse.current != null && Mouse.current.wasUpdatedThisFrame))
+            if (!isUsingMouseAndKeyboard)
             {
-                if (!isUsingMouseAndKeyboard)
-                {
-                    isUsingMouseAndKeyboard = true;
-                    isUsingGamepad = false;
-                    UpdateSprite(mouseAndKeyboardSprite);
-                }
+                isUsingMouseAndKeyboard = true;
+                isUsingGamepad = false;
+                UpdateSprite(mouseAndKeyboardSprite);
             }
         }
     }
@@ -99,7 +99,7 @@ public class BillboardInteraction : MonoBehaviour
 
     private void UpdateSprite(Sprite newSprite)
     {
-        if (spriteRenderer != null)
+        if (spriteRenderer != null && spriteRenderer.sprite != newSprite)
         {
             spriteRenderer.sprite = newSprite;
         }
