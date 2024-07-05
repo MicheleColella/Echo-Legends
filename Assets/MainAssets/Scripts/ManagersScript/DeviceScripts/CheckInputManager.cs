@@ -1,10 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using KinematicCharacterController;
 using KinematicCharacterController.Examples;
-using UnityEngine.InputSystem;
 
 namespace KinematicCharacterController.Examples
 {
@@ -39,6 +34,7 @@ namespace KinematicCharacterController.Examples
         public void SetInputState(InputState newState)
         {
             currentState = newState;
+            Debug.Log($"Input state set to: {newState}");
         }
 
         public InputState GetCurrentInputState()

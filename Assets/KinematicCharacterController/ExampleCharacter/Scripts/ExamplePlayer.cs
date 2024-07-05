@@ -5,6 +5,7 @@ using KinematicCharacterController;
 using KinematicCharacterController.Examples;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI; // Importa il namespace corretto per il pulsante UI
 
 namespace KinematicCharacterController.Examples
 {
@@ -14,6 +15,7 @@ namespace KinematicCharacterController.Examples
         public ExampleCharacterController Character;
         public FloatingJoystick floatingJoystick; // Riferimento al joystick sinistro
         public FloatingJoystick rightStickJoystick; // Riferimento al joystick destro
+        public Button fireButton; // Pulsante UI per il fuoco su mobile
 
         public bool useMouseAndKeyboard = true;
         public bool useGamepad = true;
@@ -63,6 +65,11 @@ namespace KinematicCharacterController.Examples
             playerInputActions.Player.Look.canceled += OnLook;
             playerInputActions.Player.SwitchToMouseAndKeyboard.performed += OnSwitchToMouseAndKeyboard;
             playerInputActions.Player.SwitchToGamepad.performed += OnSwitchToGamepad;
+
+            if (fireButton != null)
+            {
+                fireButton.onClick.AddListener(OnFireButtonPressed);
+            }
         }
 
         private void OnDisable()
@@ -74,6 +81,11 @@ namespace KinematicCharacterController.Examples
             playerInputActions.Player.Look.canceled -= OnLook;
             playerInputActions.Player.SwitchToMouseAndKeyboard.performed -= OnSwitchToMouseAndKeyboard;
             playerInputActions.Player.SwitchToGamepad.performed -= OnSwitchToGamepad;
+
+            if (fireButton != null)
+            {
+                fireButton.onClick.RemoveListener(OnFireButtonPressed);
+            }
         }
 
         private void Start()
@@ -163,10 +175,17 @@ namespace KinematicCharacterController.Examples
 
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
             Vector2 moveInput = new Vector2(floatingJoystick.Horizontal, floatingJoystick.Vertical);
+            Vector2 lookInput = new Vector2(rightStickJoystick.Horizontal, rightStickJoystick.Vertical);
 
             characterInputs.MoveAxisForward = moveInput.y;
             characterInputs.MoveAxisRight = moveInput.x;
             characterInputs.CameraRotation = Camera.main.transform.rotation;
+
+            if (lookInput.sqrMagnitude > 0.01f)
+            {
+                float targetAngle = Mathf.Atan2(lookInput.x, lookInput.y) * Mathf.Rad2Deg;
+                Character.SetLookAngle(targetAngle);
+            }
 
             Character.SetInputs(ref characterInputs);
         }
@@ -227,6 +246,20 @@ namespace KinematicCharacterController.Examples
                 {
                     lookInput = new Vector2(rightStickJoystick.Horizontal, rightStickJoystick.Vertical);
                 }
+            }
+        }
+
+        private void OnFireButtonPressed()
+        {
+            Debug.Log("Fire button pressed"); // Aggiungi questa linea per il debug
+            var weaponSystem = GetComponent<WeaponSystem>();
+            if (weaponSystem != null)
+            {
+                weaponSystem.FireWeapon();
+            }
+            else
+            {
+                Debug.LogWarning("WeaponSystem component not found");
             }
         }
     }

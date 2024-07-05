@@ -1,14 +1,12 @@
 using UnityEngine;
 using MidniteOilSoftware.ObjectPoolManager;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using KinematicCharacterController.Examples; // Importa il namespace corretto
+using KinematicCharacterController.Examples;
 
 public class WeaponSystem : MonoBehaviour
 {
     public WeaponData[] weapons; // Array di ScriptableObject delle armi
     public Transform firePoint; // Punto di fuoco
-    public Button fireButton; // Pulsante UI per il fuoco su mobile
 
     private int currentWeaponIndex = 0; // Indice dell'arma attualmente selezionata
     private float nextFireTime = 0f; // Tempo di attesa per il prossimo sparo
@@ -21,26 +19,16 @@ public class WeaponSystem : MonoBehaviour
     private void Awake()
     {
         playerInputActions = new InputActions();
-
-        if (CheckInputManager.Instance.GetCurrentInputState() == CheckInputManager.InputState.VirtualJoysticks)
-        {
-            if (fireButton != null)
-            {
-                fireButton.onClick.AddListener(FireWeapon);
-            }
-            else
-            {
-                Debug.LogWarning("fireButton non trovato nella scena.");
-            }
-        }
     }
-
 
     private void OnEnable()
     {
         playerInputActions.Enable();
         playerInputActions.Player.Fire.performed += OnFireStarted;
         playerInputActions.Player.Fire.canceled += OnFireStopped;
+
+        MobileFireButton.OnFireButtonPressed += OnFireButtonPressed; // Registra l'evento del pulsante mobile
+        Debug.Log("Mobile fire button event listener added.");
     }
 
     private void OnDisable()
@@ -48,6 +36,9 @@ public class WeaponSystem : MonoBehaviour
         playerInputActions.Player.Fire.performed -= OnFireStarted;
         playerInputActions.Player.Fire.canceled -= OnFireStopped;
         playerInputActions.Disable();
+
+        MobileFireButton.OnFireButtonPressed -= OnFireButtonPressed; // Deregistra l'evento del pulsante mobile
+        Debug.Log("Mobile fire button event listener removed.");
     }
 
     private void Update()
@@ -71,6 +62,7 @@ public class WeaponSystem : MonoBehaviour
             (currentState == CheckInputManager.InputState.Gamepad && context.control.device is Gamepad))
         {
             isFiring = true;
+            Debug.Log("Fire started.");
         }
     }
 
@@ -82,10 +74,11 @@ public class WeaponSystem : MonoBehaviour
             (currentState == CheckInputManager.InputState.Gamepad && context.control.device is Gamepad))
         {
             isFiring = false;
+            Debug.Log("Fire stopped.");
         }
     }
 
-    private void SelectWeapon(int index)
+    public void SelectWeapon(int index)
     {
         if (index >= 0 && index < weapons.Length)
         {
@@ -94,8 +87,9 @@ public class WeaponSystem : MonoBehaviour
         }
     }
 
-    private void FireWeapon()
+    public void FireWeapon()
     {
+        Debug.Log("Attempting to fire weapon...");
         if (Time.time >= nextFireTime)
         {
             WeaponData currentWeapon = weapons[currentWeaponIndex];
@@ -114,6 +108,12 @@ public class WeaponSystem : MonoBehaviour
                 }
 
                 GameObject projectileObject = ObjectPoolManager.SpawnGameObject(currentWeapon.projectilePrefab, firePoint.position, Quaternion.LookRotation(direction));
+                if (projectileObject == null)
+                {
+                    Debug.LogError("Failed to spawn projectile object.");
+                    continue;
+                }
+
                 Rigidbody rb = projectileObject.GetComponent<Rigidbody>();
                 if (rb == null)
                 {
@@ -122,6 +122,7 @@ public class WeaponSystem : MonoBehaviour
                 }
 
                 rb.velocity = direction * currentWeapon.projectileSpeed;
+                Debug.Log("Projectile fired!");
 
                 Projectile projectile = projectileObject.GetComponent<Projectile>();
                 if (projectile == null)
@@ -134,6 +135,10 @@ public class WeaponSystem : MonoBehaviour
                 projectile.collisionLayers = collisionLayers; // Assegna i layer con cui può collidere
             }
         }
+        else
+        {
+            Debug.Log("Weapon is cooling down. Next fire time: " + nextFireTime);
+        }
     }
 
     private float CalculateSpreadAngle(int index, int totalProjectiles, float spreadAngle)
@@ -145,5 +150,11 @@ public class WeaponSystem : MonoBehaviour
 
         float step = spreadAngle / (totalProjectiles - 1);
         return -spreadAngle / 2 + step * index;
+    }
+
+    private void OnFireButtonPressed()
+    {
+        Debug.Log("Fire button pressed!");
+        FireWeapon();
     }
 }

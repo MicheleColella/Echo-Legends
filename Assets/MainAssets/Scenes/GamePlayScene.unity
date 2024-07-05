@@ -449,7 +449,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: de265ec139ebd48a785df761ced4be72, type: 2}
   - {fileID: 11400000, guid: 1781de4fd35c1485d936214def1ae9a1, type: 2}
   firePoint: {fileID: 1654690709}
-  fireButton: {fileID: 1200281969}
   collisionLayers:
     serializedVersion: 2
     m_Bits: 1048576
@@ -2377,6 +2376,7 @@ MonoBehaviour:
   Character: {fileID: 80743938}
   floatingJoystick: {fileID: 2050949227}
   rightStickJoystick: {fileID: 2073895543}
+  fireButton: {fileID: 1200281969}
   useMouseAndKeyboard: 1
   useGamepad: 1
   useVirtualJoysticks: 1
@@ -4087,6 +4087,7 @@ GameObject:
   - component: {fileID: 1200281971}
   - component: {fileID: 1200281970}
   - component: {fileID: 1200281969}
+  - component: {fileID: 1200281972}
   m_Layer: 5
   m_Name: fire
   m_TagString: Untagged
@@ -4195,6 +4196,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1200281967}
   m_CullTransparentMesh: 1
+--- !u!114 &1200281972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1200281967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad4b8b4f828246648bf929b425f2e79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1206422158
 GameObject:
   m_ObjectHideFlags: 0
