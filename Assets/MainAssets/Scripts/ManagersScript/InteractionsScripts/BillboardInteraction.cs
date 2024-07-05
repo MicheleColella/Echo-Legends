@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using KinematicCharacterController.Examples; // Importa il namespace corretto
 
 public class BillboardInteraction : MonoBehaviour
 {
@@ -19,9 +20,6 @@ public class BillboardInteraction : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
     private Vector3 originalRotation;
-    private bool isUsingGamepad;
-    private bool isUsingMouseAndKeyboard;
-    private bool isUsingMobile;
 
     public enum BillboardType { LookAtCamera, CameraForward };
 
@@ -29,49 +27,20 @@ public class BillboardInteraction : MonoBehaviour
     {
         originalRotation = transform.rotation.eulerAngles;
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        if (PlatformChecker.isMobile)
-        {
-            isUsingMobile = true;
-            UpdateSprite(mobileSprite);
-        }
-        else
-        {
-            isUsingMobile = false;
-            isUsingMouseAndKeyboard = true;
-            UpdateSprite(mouseAndKeyboardSprite);
-        }
+        UpdateSpriteBasedOnInput(CheckInputManager.Instance.GetCurrentInputState());
     }
 
     private void Update()
     {
+        // Non necessario aggiornare lo sprite continuamente su mobile
         if (PlatformChecker.isMobile)
         {
-            return; // No need to check input on mobile, it's always using mobile sprite.
+            return;
         }
 
-        bool gamepadActive = Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame;
-        bool keyboardActive = Keyboard.current != null && Keyboard.current.wasUpdatedThisFrame;
-        bool mouseActive = Mouse.current != null && Mouse.current.wasUpdatedThisFrame;
-
-        if (gamepadActive)
-        {
-            if (!isUsingGamepad)
-            {
-                isUsingGamepad = true;
-                isUsingMouseAndKeyboard = false;
-                UpdateSprite(gamepadSprite);
-            }
-        }
-        else if (keyboardActive || mouseActive)
-        {
-            if (!isUsingMouseAndKeyboard)
-            {
-                isUsingMouseAndKeyboard = true;
-                isUsingGamepad = false;
-                UpdateSprite(mouseAndKeyboardSprite);
-            }
-        }
+        // Verifica lo stato di input corrente dal CheckInputManager
+        CheckInputManager.InputState currentState = CheckInputManager.Instance.GetCurrentInputState();
+        UpdateSpriteBasedOnInput(currentState);
     }
 
     private void LateUpdate()
@@ -102,6 +71,29 @@ public class BillboardInteraction : MonoBehaviour
         if (spriteRenderer != null && spriteRenderer.sprite != newSprite)
         {
             spriteRenderer.sprite = newSprite;
+        }
+    }
+
+    private void UpdateSpriteBasedOnInput(CheckInputManager.InputState inputState)
+    {
+        switch (inputState)
+        {
+            case CheckInputManager.InputState.MouseAndKeyboard:
+                UpdateSprite(mouseAndKeyboardSprite);
+                break;
+
+            case CheckInputManager.InputState.Gamepad:
+                UpdateSprite(gamepadSprite);
+                break;
+
+            case CheckInputManager.InputState.VirtualJoysticks:
+                UpdateSprite(mobileSprite);
+                break;
+
+            case CheckInputManager.InputState.None:
+            default:
+                // Gestisci uno stato di input sconosciuto se necessario
+                break;
         }
     }
 }

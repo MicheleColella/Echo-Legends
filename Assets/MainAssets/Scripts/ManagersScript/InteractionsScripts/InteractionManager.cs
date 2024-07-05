@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
-
+using KinematicCharacterController.Examples;
 public class InteractionManager : MonoBehaviour
 {
     public static InteractionManager Instance { get; private set; }
@@ -19,16 +19,7 @@ public class InteractionManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             inputActions = new InputActions();
-
-            if (PlatformChecker.isPC || PlatformChecker.isEditor)
-            {
-                inputActions.Player.Interact.performed += ctx => InteractWithNearestObject();
-            }
-            else if (PlatformChecker.isMobile)
-            {
-                // Configurare il pulsante UI per l'interazione
-                MobileInteractButton.OnInteractButtonPressed += InteractWithNearestObject;
-            }
+            inputActions.Player.Interact.performed += OnInteractPerformed;
         }
         else
         {
@@ -39,7 +30,7 @@ public class InteractionManager : MonoBehaviour
     private void OnEnable()
     {
         inputActions.Player.Enable();
-        if (PlatformChecker.isMobile)
+        if (CheckInputManager.Instance.GetCurrentInputState() == CheckInputManager.InputState.VirtualJoysticks)
         {
             MobileInteractButton.OnInteractButtonPressed += InteractWithNearestObject;
         }
@@ -48,7 +39,7 @@ public class InteractionManager : MonoBehaviour
     private void OnDisable()
     {
         inputActions.Player.Disable();
-        if (PlatformChecker.isMobile)
+        if (CheckInputManager.Instance.GetCurrentInputState() == CheckInputManager.InputState.VirtualJoysticks)
         {
             MobileInteractButton.OnInteractButtonPressed -= InteractWithNearestObject;
         }
@@ -111,6 +102,17 @@ public class InteractionManager : MonoBehaviour
         if (nearestObject != null)
         {
             // Debug.Log("Nearest object: " + nearestObject.gameObject.name);
+        }
+    }
+
+    private void OnInteractPerformed(InputAction.CallbackContext context)
+    {
+        var currentState = CheckInputManager.Instance.GetCurrentInputState();
+        if ((currentState == CheckInputManager.InputState.MouseAndKeyboard && context.control.device is Keyboard) ||
+            (currentState == CheckInputManager.InputState.MouseAndKeyboard && context.control.device is Mouse) ||
+            (currentState == CheckInputManager.InputState.Gamepad && context.control.device is Gamepad))
+        {
+            InteractWithNearestObject();
         }
     }
 

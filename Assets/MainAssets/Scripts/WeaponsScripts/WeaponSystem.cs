@@ -1,28 +1,83 @@
 using UnityEngine;
 using MidniteOilSoftware.ObjectPoolManager;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using KinematicCharacterController.Examples; // Importa il namespace corretto
 
 public class WeaponSystem : MonoBehaviour
 {
     public WeaponData[] weapons; // Array di ScriptableObject delle armi
     public Transform firePoint; // Punto di fuoco
+    public Button fireButton; // Pulsante UI per il fuoco su mobile
+
     private int currentWeaponIndex = 0; // Indice dell'arma attualmente selezionata
     private float nextFireTime = 0f; // Tempo di attesa per il prossimo sparo
+    private bool isFiring = false; // Stato di fuoco continuo
 
     public LayerMask collisionLayers; // LayerMask dei layer con cui i proiettili possono collidere
 
-    void Update()
+    private InputActions playerInputActions;
+
+    private void Awake()
+    {
+        playerInputActions = new InputActions();
+
+        if (CheckInputManager.Instance.GetCurrentInputState() == CheckInputManager.InputState.VirtualJoysticks)
+        {
+            fireButton.onClick.AddListener(FireWeapon);
+        }
+    }
+
+    private void OnEnable()
+    {
+        playerInputActions.Enable();
+        playerInputActions.Player.Fire.performed += OnFireStarted;
+        playerInputActions.Player.Fire.canceled += OnFireStopped;
+    }
+
+    private void OnDisable()
+    {
+        playerInputActions.Player.Fire.performed -= OnFireStarted;
+        playerInputActions.Player.Fire.canceled -= OnFireStopped;
+        playerInputActions.Disable();
+    }
+
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) SelectWeapon(0);
         if (Input.GetKeyDown(KeyCode.Alpha2)) SelectWeapon(1);
         if (Input.GetKeyDown(KeyCode.Alpha3)) SelectWeapon(2);
 
-        if (Input.GetKey(KeyCode.Space))
+        // Controlla se l'arma deve sparare continuamente
+        if (isFiring)
         {
             FireWeapon();
         }
     }
 
-    void SelectWeapon(int index)
+    private void OnFireStarted(InputAction.CallbackContext context)
+    {
+        var currentState = CheckInputManager.Instance.GetCurrentInputState();
+
+        if ((currentState == CheckInputManager.InputState.MouseAndKeyboard && context.control.device is Mouse) ||
+            (currentState == CheckInputManager.InputState.Gamepad && context.control.device is Gamepad))
+        {
+            isFiring = true;
+        }
+    }
+
+    private void OnFireStopped(InputAction.CallbackContext context)
+    {
+        var currentState = CheckInputManager.Instance.GetCurrentInputState();
+
+        if ((currentState == CheckInputManager.InputState.MouseAndKeyboard && context.control.device is Mouse) ||
+            (currentState == CheckInputManager.InputState.Gamepad && context.control.device is Gamepad))
+        {
+            isFiring = false;
+        }
+    }
+
+    private void SelectWeapon(int index)
     {
         if (index >= 0 && index < weapons.Length)
         {
@@ -31,7 +86,7 @@ public class WeaponSystem : MonoBehaviour
         }
     }
 
-    void FireWeapon()
+    private void FireWeapon()
     {
         if (Time.time >= nextFireTime)
         {
@@ -73,7 +128,7 @@ public class WeaponSystem : MonoBehaviour
         }
     }
 
-    float CalculateSpreadAngle(int index, int totalProjectiles, float spreadAngle)
+    private float CalculateSpreadAngle(int index, int totalProjectiles, float spreadAngle)
     {
         if (totalProjectiles == 1)
         {
