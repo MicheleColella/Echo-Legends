@@ -1,10 +1,10 @@
+// WeaponSystem.cs
 using UnityEngine;
 
 public class WeaponSystem : MonoBehaviour
 {
     public WeaponData[] weapons; // Array di ScriptableObject delle armi
     public Transform firePoint; // Punto di fuoco
-    public ProjectileObjectPool projectilePool; // Riferimento all'Object Pool
     private int currentWeaponIndex = 0; // Indice dell'arma attualmente selezionata
     private float nextFireTime = 0f; // Tempo di attesa per il prossimo sparo
 
@@ -50,17 +50,7 @@ public class WeaponSystem : MonoBehaviour
                     continue;
                 }
 
-                GameObject projectileObject = projectilePool.GetObject(currentWeapon.projectilePrefab);
-                if (projectileObject == null)
-                {
-                    Debug.LogError("Non è stato possibile ottenere un proiettile dal pool.");
-                    continue;
-                }
-
-                projectileObject.transform.position = firePoint.position;
-                projectileObject.transform.rotation = Quaternion.LookRotation(direction);
-                projectileObject.SetActive(true);
-
+                GameObject projectileObject = Instantiate(currentWeapon.projectilePrefab, firePoint.position, Quaternion.LookRotation(direction));
                 Rigidbody rb = projectileObject.GetComponent<Rigidbody>();
                 if (rb == null)
                 {
@@ -77,7 +67,7 @@ public class WeaponSystem : MonoBehaviour
                     continue;
                 }
 
-                projectile.Initialize(currentWeapon.damageRange, projectilePool);
+                projectile.Initialize(currentWeapon.damageRange, transform);
                 projectile.collisionLayers = collisionLayers; // Assegna i layer con cui può collidere
             }
         }
