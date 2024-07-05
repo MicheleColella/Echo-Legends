@@ -12,10 +12,13 @@ public class ProjectileObjectPool : MonoBehaviour
 
     public List<Pool> pools;
     private Dictionary<GameObject, Queue<GameObject>> poolDictionary;
+    private Dictionary<GameObject, GameObject> instanceToPrefabMap;
 
     void Awake()
     {
         poolDictionary = new Dictionary<GameObject, Queue<GameObject>>();
+        instanceToPrefabMap = new Dictionary<GameObject, GameObject>();
+
         foreach (Pool pool in pools)
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
@@ -25,6 +28,7 @@ public class ProjectileObjectPool : MonoBehaviour
                 GameObject obj = Instantiate(pool.prefab);
                 obj.SetActive(false);
                 objectPool.Enqueue(obj);
+                instanceToPrefabMap[obj] = pool.prefab;
             }
 
             poolDictionary.Add(pool.prefab, objectPool);
@@ -41,32 +45,37 @@ public class ProjectileObjectPool : MonoBehaviour
 
         Queue<GameObject> objectPool = poolDictionary[prefab];
 
-        if (objectPool.Count > 0)
+        foreach (GameObject obj in objectPool)
         {
-            GameObject objectToSpawn = objectPool.Dequeue();
-
-            if (objectToSpawn.activeInHierarchy)
+            if (!obj.activeInHierarchy)
             {
-                // Se l'oggetto ? attivo, ricrea un nuovo oggetto
-                objectToSpawn = Instantiate(prefab);
-                objectToSpawn.SetActive(false);
+                obj.SetActive(true);
+                return obj;
             }
+        }
 
-            objectToSpawn.SetActive(true);
-            objectPool.Enqueue(objectToSpawn);
-            return objectToSpawn;
-        }
-        else
-        {
-            GameObject newObj = Instantiate(prefab);
-            newObj.SetActive(false);
-            poolDictionary[prefab].Enqueue(newObj);
-            return newObj;
-        }
+        // Se nessun oggetto ? disponibile, creiamo un nuovo oggetto
+        GameObject newObj = Instantiate(prefab);
+        newObj.SetActive(true);
+        objectPool.Enqueue(newObj);
+        instanceToPrefabMap[newObj] = prefab;
+        return newObj;
     }
 
     public void ReturnObject(GameObject obj)
     {
         obj.SetActive(false);
+        if (instanceToPrefabMap.ContainsKey(obj))
+        {
+            GameObject prefab = instanceToPrefabMap[obj];
+            if (!poolDictionary[prefab].Contains(obj))
+            {
+                poolDictionary[prefab].Enqueue(obj);
+            }
+        }
+        else
+        {
+            Debug.LogError("Returned object does not belong to any pool: " + obj.name);
+        }
     }
 }

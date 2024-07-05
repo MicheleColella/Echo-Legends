@@ -9,17 +9,25 @@ public class Projectile : MonoBehaviour
 
     private Rigidbody rb; // Riferimento al componente Rigidbody
     public LayerMask collisionLayers; // LayerMask dei layer con cui il proiettile pu? collidere
+    private Collider projectileCollider; // Aggiungi un riferimento al Collider
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        projectileCollider = GetComponent<Collider>();
     }
 
     void OnEnable()
     {
-        // Disattiva il proiettile dopo lifeTime secondi se non ha colpito nulla
+        // Disattiva temporaneamente il Collider per evitare collisioni immediate
+        projectileCollider.enabled = false;
+        Invoke(nameof(EnableCollider), 0.1f); // Abilita il Collider dopo 0.1 secondi
         Invoke(nameof(ReturnToPool), lifeTime);
-        //Debug.Log("Projectile enabled at position: " + transform.position);
+    }
+
+    void EnableCollider()
+    {
+        projectileCollider.enabled = true;
     }
 
     void OnDisable()
@@ -30,10 +38,13 @@ public class Projectile : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision with object: " + collision.gameObject.name + " on layer: " + LayerMask.LayerToName(collision.gameObject.layer));
+        if (!projectileCollider.enabled)
+        {
+            return;
+        }
+
         if (((1 << collision.gameObject.layer) & collisionLayers) != 0)
         {
-            //Debug.Log("Return to pool due to collision with valid layer");
             ReturnToPool();
         }
     }
@@ -44,12 +55,10 @@ public class Projectile : MonoBehaviour
         float weaponDamage = Random.Range(weaponDamageRange.x, weaponDamageRange.y);
         float projectileDamage = Random.Range(damageRange.x, damageRange.y);
         totalDamage = weaponDamage + projectileDamage;
-        //Debug.Log("Projectile initialized with total damage: " + totalDamage);
     }
 
     void ReturnToPool()
     {
-        Debug.Log("Returning projectile to pool");
         pool.ReturnObject(gameObject);
     }
 }
