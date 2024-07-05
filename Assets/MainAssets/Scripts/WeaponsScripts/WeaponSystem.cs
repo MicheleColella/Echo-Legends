@@ -24,9 +24,17 @@ public class WeaponSystem : MonoBehaviour
 
         if (CheckInputManager.Instance.GetCurrentInputState() == CheckInputManager.InputState.VirtualJoysticks)
         {
-            fireButton.onClick.AddListener(FireWeapon);
+            if (fireButton != null)
+            {
+                fireButton.onClick.AddListener(FireWeapon);
+            }
+            else
+            {
+                Debug.LogWarning("fireButton non trovato nella scena.");
+            }
         }
     }
+
 
     private void OnEnable()
     {
