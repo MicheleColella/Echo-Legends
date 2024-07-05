@@ -1,5 +1,5 @@
-// WeaponSystem.cs
 using UnityEngine;
+using MidniteOilSoftware.ObjectPoolManager;
 
 public class WeaponSystem : MonoBehaviour
 {
@@ -50,7 +50,7 @@ public class WeaponSystem : MonoBehaviour
                     continue;
                 }
 
-                GameObject projectileObject = Instantiate(currentWeapon.projectilePrefab, firePoint.position, Quaternion.LookRotation(direction));
+                GameObject projectileObject = ObjectPoolManager.SpawnGameObject(currentWeapon.projectilePrefab, firePoint.position, Quaternion.LookRotation(direction));
                 Rigidbody rb = projectileObject.GetComponent<Rigidbody>();
                 if (rb == null)
                 {

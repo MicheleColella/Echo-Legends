@@ -1,7 +1,7 @@
-// Projectile.cs
 using UnityEngine;
+using MidniteOilSoftware.ObjectPoolManager;
 
-public class Projectile : MonoBehaviour
+public class Projectile : MonoBehaviour, IDespawnedPoolObject, IRetrievedPoolObject
 {
     public Vector2 damageRange; // Range del danno del proiettile
     public float lifeTime = 2f;
@@ -20,11 +20,9 @@ public class Projectile : MonoBehaviour
 
     void OnEnable()
     {
-        // Disattiva temporaneamente il Collider per evitare collisioni immediate
         projectileCollider.enabled = false;
-        Invoke(nameof(EnableCollider), 0.1f); // Abilita il Collider dopo 0.1 secondi
-        Invoke(nameof(DestroyProjectile), lifeTime);
-        //Debug.Log("Projectile enabled at position: " + transform.position);
+        Invoke(nameof(EnableCollider), 0.1f);
+        Invoke(nameof(DespawnProjectile), lifeTime);
     }
 
     void EnableCollider()
@@ -36,7 +34,6 @@ public class Projectile : MonoBehaviour
     {
         CancelInvoke();
         rb.velocity = Vector3.zero;
-        //Debug.Log("Projectile disabled at position: " + transform.position);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -46,10 +43,9 @@ public class Projectile : MonoBehaviour
             return;
         }
 
-        //Debug.Log("Collision with object: " + collision.gameObject.name + " on layer: " + LayerMask.LayerToName(collision.gameObject.layer));
         if (((1 << collision.gameObject.layer) & collisionLayers) != 0)
         {
-            DestroyProjectile();
+            DespawnProjectile();
         }
     }
 
@@ -59,21 +55,30 @@ public class Projectile : MonoBehaviour
         float weaponDamage = Random.Range(weaponDamageRange.x, weaponDamageRange.y);
         float projectileDamage = Random.Range(damageRange.x, damageRange.y);
         totalDamage = weaponDamage + projectileDamage;
-        //Debug.Log("Projectile initialized with total damage: " + totalDamage);
     }
 
-    void DestroyProjectile()
+    void DespawnProjectile()
     {
-        // Verifica la distanza dal player prima di disattivare il proiettile
         if (Vector3.Distance(transform.position, playerTransform.position) > 4f)
         {
-            //Debug.Log("Destroying projectile");
-            Destroy(gameObject);
+            ObjectPoolManager.DespawnGameObject(gameObject);
         }
         else
         {
-            // Riattiva l'invocazione di DestroyProjectile finch? non si allontana dal player
-            Invoke(nameof(DestroyProjectile), 0.5f);
+            Invoke(nameof(DespawnProjectile), 0.5f);
         }
+    }
+
+    public void ReturnedToPool()
+    {
+        if (rb)
+        {
+            rb.velocity = rb.angularVelocity = Vector3.zero;
+        }
+    }
+
+    public void RetrievedFromPool(GameObject prefab)
+    {
+        // Reset the projectile state if necessary
     }
 }
