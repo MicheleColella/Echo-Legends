@@ -59,14 +59,17 @@ public class BillboardInteraction : MonoBehaviour
                 UpdateSprite(gamepadSprite);
             }
         }
-        else if ((Keyboard.current != null && Keyboard.current.wasUpdatedThisFrame) ||
-                 (Mouse.current != null && Mouse.current.wasUpdatedThisFrame))
+        else if (Gamepad.current == null || !Gamepad.current.wasUpdatedThisFrame)
         {
-            if (!isUsingMouseAndKeyboard)
+            if ((Keyboard.current != null && Keyboard.current.wasUpdatedThisFrame) ||
+                (Mouse.current != null && Mouse.current.wasUpdatedThisFrame))
             {
-                isUsingMouseAndKeyboard = true;
-                isUsingGamepad = false;
-                UpdateSprite(mouseAndKeyboardSprite);
+                if (!isUsingMouseAndKeyboard)
+                {
+                    isUsingMouseAndKeyboard = true;
+                    isUsingGamepad = false;
+                    UpdateSprite(mouseAndKeyboardSprite);
+                }
             }
         }
     }

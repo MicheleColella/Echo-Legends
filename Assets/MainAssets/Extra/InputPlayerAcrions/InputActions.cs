@@ -55,18 +55,27 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Click"",
+                    ""name"": ""Interact"",
                     ""type"": ""Button"",
-                    ""id"": ""981c511d-f7ad-4fea-96fb-618139172e1d"",
+                    ""id"": ""cf0d3031-7c15-4bab-aa07-b015478fb296"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Interact"",
+                    ""name"": ""SwitchToMouseAndKeyboard"",
                     ""type"": ""Button"",
-                    ""id"": ""cf0d3031-7c15-4bab-aa07-b015478fb296"",
+                    ""id"": ""2762f386-40af-4a54-b37f-c70815c3bccc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwitchToGamepad"",
+                    ""type"": ""Button"",
+                    ""id"": ""c3494f4e-33df-4661-b45a-9f014b78349e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -296,17 +305,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""574b1ef8-c289-4096-b92a-f5cf04d2d7be"",
-                    ""path"": ""<Mouse>/press"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""aba30725-4aca-4ef8-8351-fa20bcc21372"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
@@ -324,6 +322,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e3d621bf-2c5f-44ce-9069-e3d3b240b639"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SwitchToMouseAndKeyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8425ce78-7905-4c00-a07a-e3e59f348b6c"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""SwitchToGamepad"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -914,8 +934,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
-        m_Player_Click = m_Player.FindAction("Click", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_SwitchToMouseAndKeyboard = m_Player.FindAction("SwitchToMouseAndKeyboard", throwIfNotFound: true);
+        m_Player_SwitchToGamepad = m_Player.FindAction("SwitchToGamepad", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -992,8 +1013,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Fire;
-    private readonly InputAction m_Player_Click;
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_SwitchToMouseAndKeyboard;
+    private readonly InputAction m_Player_SwitchToGamepad;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -1001,8 +1023,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
-        public InputAction @Click => m_Wrapper.m_Player_Click;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @SwitchToMouseAndKeyboard => m_Wrapper.m_Player_SwitchToMouseAndKeyboard;
+        public InputAction @SwitchToGamepad => m_Wrapper.m_Player_SwitchToGamepad;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1021,12 +1044,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
-            @Click.started += instance.OnClick;
-            @Click.performed += instance.OnClick;
-            @Click.canceled += instance.OnClick;
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @SwitchToMouseAndKeyboard.started += instance.OnSwitchToMouseAndKeyboard;
+            @SwitchToMouseAndKeyboard.performed += instance.OnSwitchToMouseAndKeyboard;
+            @SwitchToMouseAndKeyboard.canceled += instance.OnSwitchToMouseAndKeyboard;
+            @SwitchToGamepad.started += instance.OnSwitchToGamepad;
+            @SwitchToGamepad.performed += instance.OnSwitchToGamepad;
+            @SwitchToGamepad.canceled += instance.OnSwitchToGamepad;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1040,12 +1066,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
-            @Click.started -= instance.OnClick;
-            @Click.performed -= instance.OnClick;
-            @Click.canceled -= instance.OnClick;
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @SwitchToMouseAndKeyboard.started -= instance.OnSwitchToMouseAndKeyboard;
+            @SwitchToMouseAndKeyboard.performed -= instance.OnSwitchToMouseAndKeyboard;
+            @SwitchToMouseAndKeyboard.canceled -= instance.OnSwitchToMouseAndKeyboard;
+            @SwitchToGamepad.started -= instance.OnSwitchToGamepad;
+            @SwitchToGamepad.performed -= instance.OnSwitchToGamepad;
+            @SwitchToGamepad.canceled -= instance.OnSwitchToGamepad;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1231,8 +1260,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
-        void OnClick(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnSwitchToMouseAndKeyboard(InputAction.CallbackContext context);
+        void OnSwitchToGamepad(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
