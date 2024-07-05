@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Water
   damageRange: {x: 5, y: 10}
-  fireRate: 1
+  fireRate: 4
   projectilePrefab: {fileID: 3461241929686397981, guid: ce070860d42a4459ba41fbf158a11dd6,
     type: 3}
   projectileSpeed: 20
   projectilesPerShot: 5
-  spreadAngle: 181
+  spreadAngle: 97
