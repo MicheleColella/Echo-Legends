@@ -8,13 +8,15 @@ public class WeaponSystem : MonoBehaviour
     private int currentWeaponIndex = 0; // Indice dell'arma attualmente selezionata
     private float nextFireTime = 0f; // Tempo di attesa per il prossimo sparo
 
+    public LayerMask collisionLayers; // LayerMask dei layer con cui i proiettili possono collidere
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) SelectWeapon(0);
         if (Input.GetKeyDown(KeyCode.Alpha2)) SelectWeapon(1);
         if (Input.GetKeyDown(KeyCode.Alpha3)) SelectWeapon(2);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
             FireWeapon();
         }
@@ -76,6 +78,7 @@ public class WeaponSystem : MonoBehaviour
                 }
 
                 projectile.Initialize(currentWeapon.damageRange, projectilePool);
+                projectile.collisionLayers = collisionLayers; // Assegna i layer con cui può collidere
             }
         }
     }

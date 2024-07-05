@@ -430,6 +430,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1781de4fd35c1485d936214def1ae9a1, type: 2}
   firePoint: {fileID: 1654690709}
   projectilePool: {fileID: 860396113}
+  collisionLayers:
+    serializedVersion: 2
+    m_Bits: 1048576
 --- !u!1 &268219794
 GameObject:
   m_ObjectHideFlags: 0
@@ -1567,10 +1570,10 @@ MonoBehaviour:
   pools:
   - prefab: {fileID: 3461241929686397981, guid: a52521dee5ae24ab4a04c5e14526af97,
       type: 3}
-    initialSize: 3
+    initialSize: 20
   - prefab: {fileID: 3461241929686397981, guid: ce070860d42a4459ba41fbf158a11dd6,
       type: 3}
-    initialSize: 10
+    initialSize: 100
 --- !u!1 &928229239
 GameObject:
   m_ObjectHideFlags: 0

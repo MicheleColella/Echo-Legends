@@ -39,11 +39,21 @@ public class ProjectileObjectPool : MonoBehaviour
             return null;
         }
 
-        if (poolDictionary[prefab].Count > 0 && !poolDictionary[prefab].Peek().activeInHierarchy)
+        Queue<GameObject> objectPool = poolDictionary[prefab];
+
+        if (objectPool.Count > 0)
         {
-            GameObject objectToSpawn = poolDictionary[prefab].Dequeue();
+            GameObject objectToSpawn = objectPool.Dequeue();
+
+            if (objectToSpawn.activeInHierarchy)
+            {
+                // Se l'oggetto ? attivo, ricrea un nuovo oggetto
+                objectToSpawn = Instantiate(prefab);
+                objectToSpawn.SetActive(false);
+            }
+
             objectToSpawn.SetActive(true);
-            poolDictionary[prefab].Enqueue(objectToSpawn);
+            objectPool.Enqueue(objectToSpawn);
             return objectToSpawn;
         }
         else
