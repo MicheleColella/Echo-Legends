@@ -28,9 +28,6 @@ public class WeaponSystem : MonoBehaviour
         playerInputActions.Enable();
         playerInputActions.Player.Fire.performed += OnFireStarted;
         playerInputActions.Player.Fire.canceled += OnFireStopped;
-
-        MobileFireButton.OnFireButtonPressed += OnFireButtonPressed; // Registra l'evento del pulsante mobile
-        Debug.Log("Mobile fire button event listener added.");
     }
 
     private void OnDisable()
@@ -38,9 +35,6 @@ public class WeaponSystem : MonoBehaviour
         playerInputActions.Player.Fire.performed -= OnFireStarted;
         playerInputActions.Player.Fire.canceled -= OnFireStopped;
         playerInputActions.Disable();
-
-        MobileFireButton.OnFireButtonPressed -= OnFireButtonPressed; // Deregistra l'evento del pulsante mobile
-        Debug.Log("Mobile fire button event listener removed.");
     }
 
     private void Update()
