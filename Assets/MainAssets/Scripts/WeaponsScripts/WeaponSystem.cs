@@ -12,6 +12,8 @@ public class WeaponSystem : MonoBehaviour
     private float nextFireTime = 0f; // Tempo di attesa per il prossimo sparo
     private bool isFiring = false; // Stato di fuoco continuo
 
+    public bool isMobileFiring = false;
+
     public LayerMask collisionLayers; // LayerMask dei layer con cui i proiettili possono collidere
 
     private InputActions playerInputActions;
@@ -49,6 +51,11 @@ public class WeaponSystem : MonoBehaviour
 
         // Controlla se l'arma deve sparare continuamente
         if (isFiring)
+        {
+            FireWeapon();
+        }
+
+        if (isMobileFiring)
         {
             FireWeapon();
         }

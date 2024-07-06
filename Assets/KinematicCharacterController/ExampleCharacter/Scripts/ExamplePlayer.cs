@@ -15,7 +15,6 @@ namespace KinematicCharacterController.Examples
         public ExampleCharacterController Character;
         public FloatingJoystick floatingJoystick; // Riferimento al joystick sinistro
         public FloatingJoystick rightStickJoystick; // Riferimento al joystick destro
-        public Button fireButton; // Pulsante UI per il fuoco su mobile
 
         public bool useMouseAndKeyboard = true;
         public bool useGamepad = true;
@@ -24,6 +23,8 @@ namespace KinematicCharacterController.Examples
         private InputActions playerInputActions;
         private Vector2 keyboardMoveInput;
         private Vector2 lookInput;
+
+        public WeaponSystem weaponSystem;
 
         private void Awake()
         {
@@ -65,11 +66,6 @@ namespace KinematicCharacterController.Examples
             playerInputActions.Player.Look.canceled += OnLook;
             playerInputActions.Player.SwitchToMouseAndKeyboard.performed += OnSwitchToMouseAndKeyboard;
             playerInputActions.Player.SwitchToGamepad.performed += OnSwitchToGamepad;
-
-            if (fireButton != null)
-            {
-                fireButton.onClick.AddListener(OnFireButtonPressed);
-            }
         }
 
         private void OnDisable()
@@ -81,11 +77,6 @@ namespace KinematicCharacterController.Examples
             playerInputActions.Player.Look.canceled -= OnLook;
             playerInputActions.Player.SwitchToMouseAndKeyboard.performed -= OnSwitchToMouseAndKeyboard;
             playerInputActions.Player.SwitchToGamepad.performed -= OnSwitchToGamepad;
-
-            if (fireButton != null)
-            {
-                fireButton.onClick.RemoveListener(OnFireButtonPressed);
-            }
         }
 
         private void Start()
@@ -97,6 +88,15 @@ namespace KinematicCharacterController.Examples
         private void Update()
         {
             InteractionManager.Instance.UpdatePlayerPosition(Player.transform.position);
+
+            if(rightStickJoystick.Vertical != 0 || rightStickJoystick.Horizontal != 0)
+            {
+                weaponSystem.isMobileFiring = true;
+            }
+            else
+            {
+                weaponSystem.isMobileFiring = false;
+            }
 
             if (useVirtualJoysticks && CheckInputManager.Instance.GetCurrentInputState() == CheckInputManager.InputState.VirtualJoysticks)
             {
@@ -246,20 +246,6 @@ namespace KinematicCharacterController.Examples
                 {
                     lookInput = new Vector2(rightStickJoystick.Horizontal, rightStickJoystick.Vertical);
                 }
-            }
-        }
-
-        private void OnFireButtonPressed()
-        {
-            Debug.Log("Fire button pressed"); // Aggiungi questa linea per il debug
-            var weaponSystem = GetComponent<WeaponSystem>();
-            if (weaponSystem != null)
-            {
-                weaponSystem.FireWeapon();
-            }
-            else
-            {
-                Debug.LogWarning("WeaponSystem component not found");
             }
         }
     }

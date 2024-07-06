@@ -449,6 +449,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: de265ec139ebd48a785df761ced4be72, type: 2}
   - {fileID: 11400000, guid: 1781de4fd35c1485d936214def1ae9a1, type: 2}
   firePoint: {fileID: 1654690709}
+  isMobileFiring: 0
   collisionLayers:
     serializedVersion: 2
     m_Bits: 1048576
@@ -2376,10 +2377,10 @@ MonoBehaviour:
   Character: {fileID: 80743938}
   floatingJoystick: {fileID: 2050949227}
   rightStickJoystick: {fileID: 2073895543}
-  fireButton: {fileID: 1200281969}
   useMouseAndKeyboard: 1
   useGamepad: 1
   useVirtualJoysticks: 1
+  weaponSystem: {fileID: 80743944}
 --- !u!4 &632246490
 Transform:
   m_ObjectHideFlags: 0
