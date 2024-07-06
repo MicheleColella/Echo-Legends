@@ -18,10 +18,9 @@ public class InteractableObject : MonoBehaviour
         if (childObject != null)
         {
             childAnimator = GetComponent<Animator>();
-            // Recupera la durata dell'animazione billDisappear
             foreach (AnimationClip clip in childAnimator.runtimeAnimatorController.animationClips)
             {
-                if (clip.name == "billDisappear")
+                if (clip.name == "billPressedDisappear")
                 {
                     disappearAnimationDuration = clip.length;
                     break;
@@ -33,19 +32,21 @@ public class InteractableObject : MonoBehaviour
     private void OnDestroy()
     {
         InteractionManager.Instance.UnregisterInteractable(this);
-        // Debug.Log("Destroyed interactable: " + gameObject.name);
     }
 
     public void Interact()
     {
         if (disactiveBillBoard && hasInteracted) return;
 
-        // Debug.Log("Interacted with " + gameObject.name);
-
         if (disactiveBillBoard)
         {
             hasInteracted = true;
             PlayDisappearAnimation();
+            PlayBillboardInteractAnimation();
+        }
+        else
+        {
+            PlayInteractAnimation();
         }
 
         var handler = GetComponent<IInteractionHandler>();
@@ -78,7 +79,6 @@ public class InteractableObject : MonoBehaviour
     {
         if (childAnimator != null)
         {
-            //Debug.Log("Playing appear animation");
             childAnimator.Play("billAppear");
         }
     }
@@ -87,20 +87,33 @@ public class InteractableObject : MonoBehaviour
     {
         if (childAnimator != null)
         {
-            //Debug.Log("Playing disappear animation");
             isDisappearing = true;
             childAnimator.Play("billDisappear");
             StartCoroutine(WaitAndDeactivate(disappearAnimationDuration));
         }
     }
 
+    private void PlayInteractAnimation()
+    {
+        if (childAnimator != null)
+        {
+            childAnimator.Play("billPressed");
+        }
+    }
+
+    private void PlayBillboardInteractAnimation()
+    {
+        if (childAnimator != null)
+        {
+            childAnimator.Play("billPressedDisappear");
+        }
+    }
+
     private IEnumerator WaitAndDeactivate(float waitTime)
     {
-        //Debug.Log("Waiting to deactivate: " + waitTime + " seconds");
         yield return new WaitForSeconds(waitTime);
         if (childObject != null)
         {
-            //Debug.Log("Deactivating child object");
             childObject.SetActive(false);
         }
         isDisappearing = false;
