@@ -13,4 +13,5 @@ public class WeaponData : ScriptableObject
     [Range(0, 360)]
     public float spreadAngle; // Angolo di dispersione dei proiettili
     public float recoilForce; // Forza di rinculo
+    public GameObject weaponPrefab;
 }

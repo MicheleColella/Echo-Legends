@@ -21,3 +21,5 @@ MonoBehaviour:
   projectilesPerShot: 1
   spreadAngle: 0
   recoilForce: 5
+  weaponPrefab: {fileID: 2834441298794193576, guid: 3b3b913c10e23405ea3b43d0bc4207b2,
+    type: 3}

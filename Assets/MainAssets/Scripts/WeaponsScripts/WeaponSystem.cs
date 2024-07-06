@@ -3,14 +3,14 @@ using UnityEngine;
 using MidniteOilSoftware.ObjectPoolManager;
 using UnityEngine.InputSystem;
 using KinematicCharacterController.Examples;
-using UnityEngine.UI; // Per gestire il pulsante UI
+using UnityEngine.UI;
 
 public class WeaponSystem : MonoBehaviour
 {
-    public WeaponData[] weapons; // Array di ScriptableObject delle armi
     public Transform firePoint; // Punto di fuoco
     public ExampleCharacterController playerController; // Riferimento al controller del giocatore
     public Button switchWeaponUIButton; // Pulsante UI per cambiare arma
+    public WeaponData[] inventory = new WeaponData[3]; // Inventario delle armi
 
     private int currentWeaponIndex = 0; // Indice dell'arma attualmente selezionata
     private float nextFireTime = 0f; // Tempo di attesa per il prossimo sparo
@@ -92,19 +92,25 @@ public class WeaponSystem : MonoBehaviour
 
     public void SelectWeapon(int index)
     {
-        if (index >= 0 && index < weapons.Length)
+        if (index >= 0 && index < inventory.Length && inventory[index] != null)
         {
             currentWeaponIndex = index;
-            Debug.Log("Selected Weapon: " + weapons[currentWeaponIndex].weaponName);
+            Debug.Log("Selected Weapon: " + inventory[currentWeaponIndex].weaponName);
         }
     }
 
     public void FireWeapon()
     {
         Debug.Log("Attempting to fire weapon...");
+        if (inventory[currentWeaponIndex] == null)
+        {
+            Debug.LogError("Nessuna arma selezionata.");
+            return;
+        }
+
         if (Time.time >= nextFireTime)
         {
-            WeaponData currentWeapon = weapons[currentWeaponIndex];
+            WeaponData currentWeapon = inventory[currentWeaponIndex];
             nextFireTime = Time.time + 1f / currentWeapon.fireRate;
 
             for (int i = 0; i < currentWeapon.projectilesPerShot; i++)
@@ -169,15 +175,76 @@ public class WeaponSystem : MonoBehaviour
 
     private void OnSwitchWeapon(InputAction.CallbackContext context)
     {
-        // Passa alla prossima arma
-        currentWeaponIndex = (currentWeaponIndex + 1) % weapons.Length;
-        SelectWeapon(currentWeaponIndex);
+        SwitchToNextWeapon();
     }
 
     private void OnSwitchWeaponUI()
     {
-        // Gestisci il cambio arma tramite il pulsante UI
-        currentWeaponIndex = (currentWeaponIndex + 1) % weapons.Length;
-        SelectWeapon(currentWeaponIndex);
+        SwitchToNextWeapon();
+    }
+
+    private void SwitchToNextWeapon()
+    {
+        int startIndex = currentWeaponIndex;
+        do
+        {
+            currentWeaponIndex = (currentWeaponIndex + 1) % inventory.Length;
+        } while (inventory[currentWeaponIndex] == null && currentWeaponIndex != startIndex);
+
+        if (inventory[currentWeaponIndex] != null)
+        {
+            SelectWeapon(currentWeaponIndex);
+        }
+        else
+        {
+            Debug.Log("Nessuna arma disponibile.");
+        }
+    }
+
+    // Nuova funzione per raccogliere armi
+    public void PickupWeapon(WeaponData weapon)
+    {
+        if (weapon == null)
+        {
+            Debug.LogError("Nessuna arma da raccogliere.");
+            return;
+        }
+
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i] == null)
+            {
+                inventory[i] = weapon;
+                Debug.Log("Arma raccolta: " + weapon.weaponName);
+                return;
+            }
+        }
+
+        WeaponData droppedWeapon = inventory[currentWeaponIndex];
+        inventory[currentWeaponIndex] = weapon;
+        Debug.Log("Scambiato " + droppedWeapon.weaponName + " con " + weapon.weaponName);
+
+        // Codice per droppare l'arma corrente
+        DropCurrentWeapon(droppedWeapon);
+    }
+
+    private void DropCurrentWeapon(WeaponData droppedWeapon)
+    {
+        if (droppedWeapon == null || droppedWeapon.weaponPrefab == null)
+        {
+            Debug.LogError("Impossibile droppare l'arma: prefab non assegnato.");
+            return;
+        }
+
+        // Calcola la posizione più lontana di drop davanti al player
+        float dropDistance = 2.0f; // Distanza di drop dall'attuale posizione del player
+        Vector3 dropPosition = playerController.transform.position + playerController.transform.forward * dropDistance;
+
+        // Imposta la rotazione dell'arma a -45° sull'asse Y
+        Quaternion dropRotation = Quaternion.Euler(0, -45, 0);
+
+        // Instanzia il prefab dell'arma a terra alla posizione calcolata e con la rotazione specificata
+        Instantiate(droppedWeapon.weaponPrefab, dropPosition, dropRotation);
+        Debug.Log("Arma droppata: " + droppedWeapon.weaponName);
     }
 }
