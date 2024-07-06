@@ -20,3 +20,4 @@ MonoBehaviour:
   projectileSpeed: 30
   projectilesPerShot: 1
   spreadAngle: 0
+  recoilForce: 5

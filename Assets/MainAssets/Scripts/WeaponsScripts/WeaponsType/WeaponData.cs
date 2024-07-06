@@ -1,3 +1,4 @@
+// WeaponData.cs
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewWeapon", menuName = "Weapons/Weapon")]
@@ -11,4 +12,5 @@ public class WeaponData : ScriptableObject
     public int projectilesPerShot; // Numero di proiettili sparati per ogni colpo
     [Range(0, 360)]
     public float spreadAngle; // Angolo di dispersione dei proiettili
+    public float recoilForce; // Forza di rinculo
 }

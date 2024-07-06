@@ -1,19 +1,22 @@
+// WeaponSystem.cs
 using UnityEngine;
 using MidniteOilSoftware.ObjectPoolManager;
 using UnityEngine.InputSystem;
 using KinematicCharacterController.Examples;
+using UnityEngine.UI; // Per gestire il pulsante UI
 
 public class WeaponSystem : MonoBehaviour
 {
     public WeaponData[] weapons; // Array di ScriptableObject delle armi
     public Transform firePoint; // Punto di fuoco
+    public ExampleCharacterController playerController; // Riferimento al controller del giocatore
+    public Button switchWeaponUIButton; // Pulsante UI per cambiare arma
 
     private int currentWeaponIndex = 0; // Indice dell'arma attualmente selezionata
     private float nextFireTime = 0f; // Tempo di attesa per il prossimo sparo
     private bool isFiring = false; // Stato di fuoco continuo
 
     public bool isMobileFiring = false;
-
     public LayerMask collisionLayers; // LayerMask dei layer con cui i proiettili possono collidere
 
     private InputActions playerInputActions;
@@ -28,12 +31,25 @@ public class WeaponSystem : MonoBehaviour
         playerInputActions.Enable();
         playerInputActions.Player.Fire.performed += OnFireStarted;
         playerInputActions.Player.Fire.canceled += OnFireStopped;
+        playerInputActions.Player.SwitchWeapon.performed += OnSwitchWeapon; // Gestisci il cambio arma con "Tab" e "Y"
+
+        if (switchWeaponUIButton != null)
+        {
+            switchWeaponUIButton.onClick.AddListener(OnSwitchWeaponUI); // Aggiungi listener per il pulsante UI
+        }
     }
 
     private void OnDisable()
     {
         playerInputActions.Player.Fire.performed -= OnFireStarted;
         playerInputActions.Player.Fire.canceled -= OnFireStopped;
+        playerInputActions.Player.SwitchWeapon.performed -= OnSwitchWeapon; // Rimuovi gestione cambio arma
+
+        if (switchWeaponUIButton != null)
+        {
+            switchWeaponUIButton.onClick.RemoveListener(OnSwitchWeaponUI); // Rimuovi listener per il pulsante UI
+        }
+
         playerInputActions.Disable();
     }
 
@@ -43,7 +59,6 @@ public class WeaponSystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha2)) SelectWeapon(1);
         if (Input.GetKeyDown(KeyCode.Alpha3)) SelectWeapon(2);
 
-        // Controlla se l'arma deve sparare continuamente
         if (isFiring)
         {
             FireWeapon();
@@ -135,6 +150,9 @@ public class WeaponSystem : MonoBehaviour
                 projectile.Initialize(currentWeapon.damageRange, transform);
                 projectile.collisionLayers = collisionLayers; // Assegna i layer con cui può collidere
             }
+
+            Vector3 recoilDirection = -firePoint.forward * currentWeapon.recoilForce;
+            playerController.AddVelocity(recoilDirection);
         }
         else
         {
@@ -153,9 +171,17 @@ public class WeaponSystem : MonoBehaviour
         return -spreadAngle / 2 + step * index;
     }
 
-    private void OnFireButtonPressed()
+    private void OnSwitchWeapon(InputAction.CallbackContext context)
     {
-        Debug.Log("Fire button pressed!");
-        FireWeapon();
+        // Passa alla prossima arma
+        currentWeaponIndex = (currentWeaponIndex + 1) % weapons.Length;
+        SelectWeapon(currentWeaponIndex);
+    }
+
+    private void OnSwitchWeaponUI()
+    {
+        // Gestisci il cambio arma tramite il pulsante UI
+        currentWeaponIndex = (currentWeaponIndex + 1) % weapons.Length;
+        SelectWeapon(currentWeaponIndex);
     }
 }
