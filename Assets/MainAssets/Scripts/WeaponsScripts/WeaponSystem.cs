@@ -236,15 +236,24 @@ public class WeaponSystem : MonoBehaviour
             return;
         }
 
-        // Calcola la posizione più lontana di drop davanti al player
-        float dropDistance = 2.0f; // Distanza di drop dall'attuale posizione del player
-        Vector3 dropPosition = playerController.transform.position + playerController.transform.forward * dropDistance;
+        // Calcola la posizione di drop davanti al player
+        float dropDistance = 1.0f; // Distanza di drop iniziale dall'attuale posizione del player
+        float dropHeight = 0.5f; // Altezza del drop
+        Vector3 dropPosition = playerController.transform.position + playerController.transform.forward * dropDistance + Vector3.up * dropHeight;
 
         // Imposta la rotazione dell'arma a -45° sull'asse Y
         Quaternion dropRotation = Quaternion.Euler(0, -45, 0);
 
         // Instanzia il prefab dell'arma a terra alla posizione calcolata e con la rotazione specificata
-        Instantiate(droppedWeapon.weaponPrefab, dropPosition, dropRotation);
+        GameObject droppedWeaponObject = Instantiate(droppedWeapon.weaponPrefab, dropPosition, dropRotation);
+
+        // Applica una forza al rigidbody dell'arma per lanciarla in avanti
+        Rigidbody rb = droppedWeaponObject.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            float throwForce = 5f; // Forza del lancio
+            rb.AddForce(playerController.transform.forward * throwForce, ForceMode.Impulse);
+        }
         Debug.Log("Arma droppata: " + droppedWeapon.weaponName);
     }
 }

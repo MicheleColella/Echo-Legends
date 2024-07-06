@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1804202998060260801}
   - component: {fileID: 2843049661787205694}
   - component: {fileID: 7406238056119491272}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 8786695779128604287}
   - component: {fileID: -835025092379246387}
   - component: {fileID: 4978792320398280435}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Thunder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   - component: {fileID: 5933856115460019332}
   - component: {fileID: 2055309918531362043}
   - component: {fileID: 2698444799951118113}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
