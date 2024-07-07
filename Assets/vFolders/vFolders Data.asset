@@ -87,6 +87,16 @@ MonoBehaviour:
     - 9e4418d57d21c4f569173d5b46237fe3
     - b8fa0fb5119174d009587653f49f9201
     - fefff04efd448433d991a3ba17ec0277
+    - 610277f5500f146f897c6222fb3781b0
+    - 51d3ccebaafea430785aa01f46b95f50
+    - 9203407365ec04acbb4ad5fcef7f6cbe
+    - 0385d7ca977e7447b8e454f96bbcc095
+    - 33011b2e77e7745778b2c554f6ffcab9
+    - 0bf912241e933459d989948402d15b82
+    - 4dee806270fce4eeda764142c3275035
+    - e7265bcffd052474ea2b8ab3051f3c26
+    - f54d1bd14bd3ca042bd867b519fee8cc
+    - 694b1509a1f6d49db8c7b748c072eebb
     values:
     - guid: 00000000000000001000000000000000
       iColor: 0
@@ -452,4 +462,54 @@ MonoBehaviour:
       iColor: 0
       autoIcon: Material Icon
       customIcon: 
+      autoIconDirty: 0
+    - guid: 610277f5500f146f897c6222fb3781b0
+      iColor: 0
+      autoIcon: 
+      customIcon: 
+      autoIconDirty: 0
+    - guid: 51d3ccebaafea430785aa01f46b95f50
+      iColor: 0
+      autoIcon: Prefab Icon
+      customIcon: 
+      autoIconDirty: 0
+    - guid: 9203407365ec04acbb4ad5fcef7f6cbe
+      iColor: 0
+      autoIcon: Prefab Icon
+      customIcon: 
+      autoIconDirty: 0
+    - guid: 0385d7ca977e7447b8e454f96bbcc095
+      iColor: 0
+      autoIcon: Prefab Icon
+      customIcon: 
+      autoIconDirty: 0
+    - guid: 33011b2e77e7745778b2c554f6ffcab9
+      iColor: 0
+      autoIcon: 
+      customIcon: 
+      autoIconDirty: 0
+    - guid: 0bf912241e933459d989948402d15b82
+      iColor: 0
+      autoIcon: 
+      customIcon: 
+      autoIconDirty: 0
+    - guid: 4dee806270fce4eeda764142c3275035
+      iColor: 0
+      autoIcon: cs Script Icon
+      customIcon: 
+      autoIconDirty: 0
+    - guid: e7265bcffd052474ea2b8ab3051f3c26
+      iColor: 0
+      autoIcon: 
+      customIcon: 
+      autoIconDirty: 0
+    - guid: f54d1bd14bd3ca042bd867b519fee8cc
+      iColor: 0
+      autoIcon: 
+      customIcon: 
+      autoIconDirty: 0
+    - guid: 694b1509a1f6d49db8c7b748c072eebb
+      iColor: 8
+      autoIcon: 
+      customIcon: Material Icon
       autoIconDirty: 0
