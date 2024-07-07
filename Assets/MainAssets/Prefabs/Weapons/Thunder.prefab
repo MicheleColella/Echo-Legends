@@ -66,6 +66,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionMessage: Thunder
   weaponData: {fileID: 11400000, guid: 2d21edfa50a8249f3bbe5c7432145233, type: 2}
+  animator: {fileID: 1049565486383315974}
 --- !u!95 &2096346223133490946
 Animator:
   serializedVersion: 5

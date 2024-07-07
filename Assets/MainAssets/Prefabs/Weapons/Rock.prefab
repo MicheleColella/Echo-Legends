@@ -66,6 +66,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionMessage: Rock
   weaponData: {fileID: 11400000, guid: 7abf5583fd0884634a553bb5486324a2, type: 2}
+  animator: {fileID: 1049565486383315974}
 --- !u!95 &2096346223133490946
 Animator:
   serializedVersion: 5
