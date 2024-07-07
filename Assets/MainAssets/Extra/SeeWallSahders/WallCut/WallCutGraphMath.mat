@@ -60,6 +60,6 @@ Material:
     - _Size: 0
     - _Smoothness: 0.299
     m_Colors:
-    - _Position: {r: 0.5020652, g: 0.47146267, b: 24.119324, a: 0}
+    - _Position: {r: 0.53599334, g: 0.44183955, b: 23.329208, a: 0}
     - _Tint: {r: 1, g: 0.25943398, b: 0.25943398, a: 0}
   m_BuildTextureStacks: []
