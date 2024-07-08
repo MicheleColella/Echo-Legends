@@ -7,7 +7,7 @@ public class CircleSync : MonoBehaviour
     public static int posID = Shader.PropertyToID("_Position");
     public static int sizeID = Shader.PropertyToID("_Size");
 
-    public Material wallMaterial;
+    public List<Material> materials; // Lista dei materiali da aggiornare
     public Camera Camera;
     public LayerMask Mask;
 
@@ -23,6 +23,18 @@ public class CircleSync : MonoBehaviour
     {
         targetPosition = Camera.WorldToViewportPoint(transform.position) + offset;
         currentPosition = targetPosition;
+
+        PopulateMaterials();
+    }
+
+    void PopulateMaterials()
+    {
+        materials.Clear();
+        Renderer[] renderers = FindObjectsOfType<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            materials.AddRange(renderer.materials);
+        }
     }
 
     void LateUpdate()
@@ -40,11 +52,20 @@ public class CircleSync : MonoBehaviour
         }
 
         currentSize = Mathf.Lerp(currentSize, targetSize, Time.deltaTime * transitionSpeed);
-        wallMaterial.SetFloat(sizeID, currentSize);
-
         targetPosition = Camera.WorldToViewportPoint(transform.position) + offset;
         currentPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * transitionSpeed);
 
-        wallMaterial.SetVector(posID, currentPosition);
+        // Aggiorna tutte le istanze dei materiali
+        foreach (var material in materials)
+        {
+            if (material.HasProperty(posID))
+            {
+                material.SetVector(posID, currentPosition);
+            }
+            if (material.HasProperty(sizeID))
+            {
+                material.SetFloat(sizeID, currentSize);
+            }
+        }
     }
 }

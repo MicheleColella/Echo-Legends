@@ -74,7 +74,7 @@ public class WeaponSystem : MonoBehaviour
             (currentState == CheckInputManager.InputState.Gamepad && context.control.device is Gamepad))
         {
             isFiring = true;
-            Debug.Log("Fire started.");
+            //Debug.Log("Fire started.");
         }
     }
 
@@ -86,7 +86,7 @@ public class WeaponSystem : MonoBehaviour
             (currentState == CheckInputManager.InputState.Gamepad && context.control.device is Gamepad))
         {
             isFiring = false;
-            Debug.Log("Fire stopped.");
+            //Debug.Log("Fire stopped.");
         }
     }
 
@@ -95,13 +95,13 @@ public class WeaponSystem : MonoBehaviour
         if (index >= 0 && index < inventory.Length && inventory[index] != null)
         {
             currentWeaponIndex = index;
-            Debug.Log("Selected Weapon: " + inventory[currentWeaponIndex].weaponName);
+            //Debug.Log("Selected Weapon: " + inventory[currentWeaponIndex].weaponName);
         }
     }
 
     public void FireWeapon()
     {
-        Debug.Log("Attempting to fire weapon...");
+        //Debug.Log("Attempting to fire weapon...");
         if (inventory[currentWeaponIndex] == null)
         {
             Debug.LogError("Nessuna arma selezionata.");
@@ -140,7 +140,7 @@ public class WeaponSystem : MonoBehaviour
                 }
 
                 rb.velocity = direction * currentWeapon.projectileSpeed;
-                Debug.Log("Projectile fired!");
+                //Debug.Log("Projectile fired!");
 
                 Projectile projectile = projectileObject.GetComponent<Projectile>();
                 if (projectile == null)
@@ -158,7 +158,7 @@ public class WeaponSystem : MonoBehaviour
         }
         else
         {
-            Debug.Log("Weapon is cooling down. Next fire time: " + nextFireTime);
+            //Debug.Log("Weapon is cooling down. Next fire time: " + nextFireTime);
         }
     }
 
@@ -222,7 +222,7 @@ public class WeaponSystem : MonoBehaviour
 
         WeaponData droppedWeapon = inventory[currentWeaponIndex];
         inventory[currentWeaponIndex] = weapon;
-        Debug.Log("Scambiato " + droppedWeapon.weaponName + " con " + weapon.weaponName);
+        //Debug.Log("Scambiato " + droppedWeapon.weaponName + " con " + weapon.weaponName);
 
         // Codice per droppare l'arma corrente
         DropCurrentWeapon(droppedWeapon);
