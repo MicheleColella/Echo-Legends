@@ -21,6 +21,9 @@ public class WeaponSystem : MonoBehaviour
 
     private InputActions playerInputActions;
 
+    public int maxAmmo = 420; // Massimo numero di munizioni che il player può avere
+    public int currentAmmo = 100; // Munizioni attualmente disponibili
+
     private void Awake()
     {
         playerInputActions = new InputActions();
@@ -74,7 +77,6 @@ public class WeaponSystem : MonoBehaviour
             (currentState == CheckInputManager.InputState.Gamepad && context.control.device is Gamepad))
         {
             isFiring = true;
-            //Debug.Log("Fire started.");
         }
     }
 
@@ -86,7 +88,6 @@ public class WeaponSystem : MonoBehaviour
             (currentState == CheckInputManager.InputState.Gamepad && context.control.device is Gamepad))
         {
             isFiring = false;
-            //Debug.Log("Fire stopped.");
         }
     }
 
@@ -95,22 +96,25 @@ public class WeaponSystem : MonoBehaviour
         if (index >= 0 && index < inventory.Length && inventory[index] != null)
         {
             currentWeaponIndex = index;
-            //Debug.Log("Selected Weapon: " + inventory[currentWeaponIndex].weaponName);
         }
     }
 
     public void FireWeapon()
     {
-        //Debug.Log("Attempting to fire weapon...");
         if (inventory[currentWeaponIndex] == null)
         {
-            Debug.LogError("Nessuna arma selezionata.");
+            return;
+        }
+
+        WeaponData currentWeapon = inventory[currentWeaponIndex];
+
+        if (currentAmmo < currentWeapon.ammoPerShot)
+        {
             return;
         }
 
         if (Time.time >= nextFireTime)
         {
-            WeaponData currentWeapon = inventory[currentWeaponIndex];
             nextFireTime = Time.time + 1f / currentWeapon.fireRate;
 
             for (int i = 0; i < currentWeapon.projectilesPerShot; i++)
@@ -121,31 +125,26 @@ public class WeaponSystem : MonoBehaviour
 
                 if (float.IsNaN(direction.x) || float.IsNaN(direction.y) || float.IsNaN(direction.z))
                 {
-                    Debug.LogError("Direzione del proiettile non valida");
                     continue;
                 }
 
                 GameObject projectileObject = ObjectPoolManager.SpawnGameObject(currentWeapon.projectilePrefab, firePoint.position, Quaternion.LookRotation(direction));
                 if (projectileObject == null)
                 {
-                    Debug.LogError("Failed to spawn projectile object.");
                     continue;
                 }
 
                 Rigidbody rb = projectileObject.GetComponent<Rigidbody>();
                 if (rb == null)
                 {
-                    Debug.LogError("Rigidbody non trovato sul proiettile");
                     continue;
                 }
 
                 rb.velocity = direction * currentWeapon.projectileSpeed;
-                //Debug.Log("Projectile fired!");
 
                 Projectile projectile = projectileObject.GetComponent<Projectile>();
                 if (projectile == null)
                 {
-                    Debug.LogError("Componente Projectile non trovato sul proiettile");
                     continue;
                 }
 
@@ -153,12 +152,9 @@ public class WeaponSystem : MonoBehaviour
                 projectile.collisionLayers = collisionLayers; // Assegna i layer con cui può collidere
             }
 
+            currentAmmo -= currentWeapon.ammoPerShot;
             Vector3 recoilDirection = -firePoint.forward * currentWeapon.recoilForce;
             playerController.AddVelocity(recoilDirection);
-        }
-        else
-        {
-            //Debug.Log("Weapon is cooling down. Next fire time: " + nextFireTime);
         }
     }
 
@@ -195,18 +191,12 @@ public class WeaponSystem : MonoBehaviour
         {
             SelectWeapon(currentWeaponIndex);
         }
-        else
-        {
-            Debug.Log("Nessuna arma disponibile.");
-        }
     }
 
-    // Nuova funzione per raccogliere armi
     public void PickupWeapon(WeaponData weapon)
     {
         if (weapon == null)
         {
-            Debug.LogError("Nessuna arma da raccogliere.");
             return;
         }
 
@@ -215,16 +205,13 @@ public class WeaponSystem : MonoBehaviour
             if (inventory[i] == null)
             {
                 inventory[i] = weapon;
-                Debug.Log("Arma raccolta: " + weapon.weaponName);
                 return;
             }
         }
 
         WeaponData droppedWeapon = inventory[currentWeaponIndex];
         inventory[currentWeaponIndex] = weapon;
-        //Debug.Log("Scambiato " + droppedWeapon.weaponName + " con " + weapon.weaponName);
 
-        // Codice per droppare l'arma corrente
         DropCurrentWeapon(droppedWeapon);
     }
 
@@ -232,28 +219,26 @@ public class WeaponSystem : MonoBehaviour
     {
         if (droppedWeapon == null || droppedWeapon.weaponPrefab == null)
         {
-            Debug.LogError("Impossibile droppare l'arma: prefab non assegnato.");
             return;
         }
 
-        // Calcola la posizione di drop davanti al player
-        float dropDistance = 1.0f; // Distanza di drop iniziale dall'attuale posizione del player
-        float dropHeight = 0.5f; // Altezza del drop
+        float dropDistance = 1.0f;
+        float dropHeight = 0.5f;
         Vector3 dropPosition = playerController.transform.position + playerController.transform.forward * dropDistance + Vector3.up * dropHeight;
-
-        // Imposta la rotazione dell'arma a -45° sull'asse Y
         Quaternion dropRotation = Quaternion.Euler(0, -45, 0);
 
-        // Instanzia il prefab dell'arma a terra alla posizione calcolata e con la rotazione specificata
         GameObject droppedWeaponObject = Instantiate(droppedWeapon.weaponPrefab, dropPosition, dropRotation);
 
-        // Applica una forza al rigidbody dell'arma per lanciarla in avanti
         Rigidbody rb = droppedWeaponObject.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            float throwForce = 5f; // Forza del lancio
+            float throwForce = 5f;
             rb.AddForce(playerController.transform.forward * throwForce, ForceMode.Impulse);
         }
-        Debug.Log("Arma droppata: " + droppedWeapon.weaponName);
+    }
+
+    public void AddAmmo(int amount)
+    {
+        currentAmmo = Mathf.Min(currentAmmo + amount, maxAmmo);
     }
 }

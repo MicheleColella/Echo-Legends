@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Fire
   damageRange: {x: 10, y: 20}
-  fireRate: 4
+  fireRate: 1
   projectilePrefab: {fileID: 3461241929686397981, guid: a52521dee5ae24ab4a04c5e14526af97,
     type: 3}
-  projectileSpeed: 30
+  projectileSpeed: 20
   projectilesPerShot: 1
   spreadAngle: 0
   recoilForce: 5
   weaponPrefab: {fileID: 1087392788168209010, guid: a2656307eacfd4f55b6d0033f2dba47c,
     type: 3}
+  ammoPerShot: 10

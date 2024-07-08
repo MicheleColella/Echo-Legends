@@ -65,7 +65,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactionMessage: Water
-  weaponData: {fileID: 11400000, guid: 1781de4fd35c1485d936214def1ae9a1, type: 2}
+  weaponData: {fileID: 11400000, guid: 3c2cf263f93df4e60bdb090bb5e007ba, type: 2}
   animator: {fileID: 8998576175252180181}
 --- !u!95 &8467210729705608476
 Animator:

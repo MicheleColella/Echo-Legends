@@ -450,12 +450,14 @@ MonoBehaviour:
   switchWeaponUIButton: {fileID: 258717839}
   inventory:
   - {fileID: 11400000, guid: de265ec139ebd48a785df761ced4be72, type: 2}
-  - {fileID: 11400000, guid: 7abf5583fd0884634a553bb5486324a2, type: 2}
-  - {fileID: 11400000, guid: 2d21edfa50a8249f3bbe5c7432145233, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   isMobileFiring: 0
   collisionLayers:
     serializedVersion: 2
     m_Bits: 1048576
+  maxAmmo: 500
+  currentAmmo: 500
 --- !u!1001 &121312027
 PrefabInstance:
   m_ObjectHideFlags: 0
