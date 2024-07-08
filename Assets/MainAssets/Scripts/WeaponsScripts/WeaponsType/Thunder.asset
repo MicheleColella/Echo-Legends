@@ -24,3 +24,4 @@ MonoBehaviour:
   weaponPrefab: {fileID: 1087392788168209010, guid: 242b95897dd5c4995ae8f17b7f597762,
     type: 3}
   ammoPerShot: 50
+  weaponSprite: {fileID: -607652506, guid: 6582f34ddd5f686408c019550cd94c9d, type: 3}

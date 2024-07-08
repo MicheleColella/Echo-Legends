@@ -1,9 +1,9 @@
-// WeaponSystem.cs
 using UnityEngine;
 using MidniteOilSoftware.ObjectPoolManager;
 using UnityEngine.InputSystem;
 using KinematicCharacterController.Examples;
 using UnityEngine.UI;
+using System;
 
 public class WeaponSystem : MonoBehaviour
 {
@@ -12,7 +12,7 @@ public class WeaponSystem : MonoBehaviour
     public Button switchWeaponUIButton; // Pulsante UI per cambiare arma
     public WeaponData[] inventory = new WeaponData[3]; // Inventario delle armi
 
-    private int currentWeaponIndex = 0; // Indice dell'arma attualmente selezionata
+    public int currentWeaponIndex = 0; // Indice dell'arma attualmente selezionata
     private float nextFireTime = 0f; // Tempo di attesa per il prossimo sparo
     private bool isFiring = false; // Stato di fuoco continuo
 
@@ -23,6 +23,8 @@ public class WeaponSystem : MonoBehaviour
 
     public int maxAmmo = 420; // Massimo numero di munizioni che il player può avere
     public int currentAmmo = 100; // Munizioni attualmente disponibili
+
+    public event Action OnWeaponChanged; // Evento per notificare il cambio dell'arma
 
     private void Awake()
     {
@@ -96,6 +98,7 @@ public class WeaponSystem : MonoBehaviour
         if (index >= 0 && index < inventory.Length && inventory[index] != null)
         {
             currentWeaponIndex = index;
+            OnWeaponChanged?.Invoke(); // Notifica il cambio dell'arma
         }
     }
 
@@ -240,5 +243,11 @@ public class WeaponSystem : MonoBehaviour
     public void AddAmmo(int amount)
     {
         currentAmmo = Mathf.Min(currentAmmo + amount, maxAmmo);
+    }
+
+    // Metodo per ottenere l'indice dell'arma corrente
+    public int GetCurrentWeaponIndex()
+    {
+        return currentWeaponIndex;
     }
 }

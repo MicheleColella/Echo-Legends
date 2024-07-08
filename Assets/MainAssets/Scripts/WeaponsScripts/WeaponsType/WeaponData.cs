@@ -1,4 +1,3 @@
-// WeaponData.cs
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewWeapon", menuName = "Weapons/Weapon")]
@@ -15,4 +14,5 @@ public class WeaponData : ScriptableObject
     public float recoilForce; // Forza di rinculo
     public GameObject weaponPrefab;
     public int ammoPerShot; // Munizioni consumate per ogni colpo
+    public Sprite weaponSprite; // Sprite dell'arma
 }

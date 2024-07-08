@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Rock
   damageRange: {x: 30, y: 60}
-  fireRate: 0.2
+  fireRate: 1
   projectilePrefab: {fileID: 3461241929686397981, guid: a52521dee5ae24ab4a04c5e14526af97,
     type: 3}
   projectileSpeed: 5
@@ -24,3 +24,4 @@ MonoBehaviour:
   weaponPrefab: {fileID: 1087392788168209010, guid: 00cf5bb2a73aa4cc89a72099018c4e18,
     type: 3}
   ammoPerShot: 40
+  weaponSprite: {fileID: 496806899, guid: 6582f34ddd5f686408c019550cd94c9d, type: 3}
