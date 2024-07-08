@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Fire
   damageRange: {x: 10, y: 20}
-  fireRate: 1
+  fireRate: 3
   projectilePrefab: {fileID: 3461241929686397981, guid: a52521dee5ae24ab4a04c5e14526af97,
     type: 3}
   projectileSpeed: 20

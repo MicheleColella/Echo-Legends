@@ -450,8 +450,8 @@ MonoBehaviour:
   switchWeaponUIButton: {fileID: 258717839}
   inventory:
   - {fileID: 11400000, guid: de265ec139ebd48a785df761ced4be72, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: c7da2a4a162dc4214a87651243ad81bb, type: 2}
+  - {fileID: 11400000, guid: da04864de4a7b482fba1716313c96c68, type: 2}
   isMobileFiring: 0
   collisionLayers:
     serializedVersion: 2
