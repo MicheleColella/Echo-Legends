@@ -208,6 +208,7 @@ public class WeaponSystem : MonoBehaviour
             if (inventory[i] == null)
             {
                 inventory[i] = weapon;
+                OnWeaponChanged?.Invoke(); // Notifica il cambio dell'arma
                 return;
             }
         }
@@ -216,6 +217,7 @@ public class WeaponSystem : MonoBehaviour
         inventory[currentWeaponIndex] = weapon;
 
         DropCurrentWeapon(droppedWeapon);
+        OnWeaponChanged?.Invoke(); // Notifica il cambio dell'arma
     }
 
     private void DropCurrentWeapon(WeaponData droppedWeapon)
