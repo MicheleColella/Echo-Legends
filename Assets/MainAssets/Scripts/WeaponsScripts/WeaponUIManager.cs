@@ -36,8 +36,8 @@ public class WeaponUIManager : MonoBehaviour
 
     private void UpdateAmmoUI()
     {
-        // Aggiorna il testo delle munizioni
-        ammoText.text = $"{weaponSystem.currentAmmo}/{weaponSystem.maxAmmo}";
+        // Aggiorna il testo delle munizioni con formato a 3 cifre
+        ammoText.text = $"{weaponSystem.currentAmmo.ToString("D3")}/{weaponSystem.maxAmmo.ToString("D3")}";
     }
 
     public void UpdateWeaponIcons()
