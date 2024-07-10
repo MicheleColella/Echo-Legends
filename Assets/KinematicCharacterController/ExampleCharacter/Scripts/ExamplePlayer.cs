@@ -25,10 +25,12 @@ namespace KinematicCharacterController.Examples
         private Vector2 lookInput;
 
         public WeaponSystem weaponSystem;
+        private DashController dashController;
 
         private void Awake()
         {
             playerInputActions = new InputActions();
+            dashController = GetComponent<DashController>();
 
             if (PlatformChecker.isPC)
             {
@@ -89,7 +91,7 @@ namespace KinematicCharacterController.Examples
         {
             InteractionManager.Instance.UpdatePlayerPosition(Player.transform.position);
 
-            if(rightStickJoystick.Vertical != 0 || rightStickJoystick.Horizontal != 0)
+            if (rightStickJoystick.Vertical != 0 || rightStickJoystick.Horizontal != 0)
             {
                 weaponSystem.isMobileFiring = true;
             }
