@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace KinematicCharacterController.Examples
@@ -22,6 +23,7 @@ namespace KinematicCharacterController.Examples
 
         [Header("UI Elements")]
         public Slider staminaSlider;
+        public Button dashButton; // Button for mobile
 
         private ExampleCharacterController characterController;
         private KinematicCharacterMotor characterMotor;
@@ -29,6 +31,10 @@ namespace KinematicCharacterController.Examples
         private bool canDash = true;
         private Coroutine rechargeCoroutine;
         private Coroutine dashCoroutine;
+
+        private InputActions playerInputActions;
+        private bool useMouseAndKeyboard = true;
+        private bool useGamepad = false;
 
         private void Awake()
         {
@@ -41,19 +47,55 @@ namespace KinematicCharacterController.Examples
                 staminaSlider.maxValue = maxStamina;
                 staminaSlider.value = currentStamina;
             }
+
+            playerInputActions = new InputActions();
+        }
+
+        private void OnEnable()
+        {
+            playerInputActions.Player.Enable();
+            playerInputActions.Player.Dash.performed += OnDashPerformed; // Use performed instead of canceled
+            playerInputActions.Player.SwitchToMouseAndKeyboard.performed += OnSwitchToMouseAndKeyboard;
+            playerInputActions.Player.SwitchToGamepad.performed += OnSwitchToGamepad;
+
+            if (dashButton != null)
+            {
+                dashButton.onClick.AddListener(OnDashButtonClicked); // Add listener for mobile button
+            }
+        }
+
+        private void OnDisable()
+        {
+            playerInputActions.Player.Disable();
+            playerInputActions.Player.Dash.performed -= OnDashPerformed;
+            playerInputActions.Player.SwitchToMouseAndKeyboard.performed -= OnSwitchToMouseAndKeyboard;
+            playerInputActions.Player.SwitchToGamepad.performed -= OnSwitchToGamepad;
+
+            if (dashButton != null)
+            {
+                dashButton.onClick.RemoveListener(OnDashButtonClicked); // Remove listener for mobile button
+            }
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                TryDash();
-            }
-
             if (staminaSlider != null)
             {
                 staminaSlider.value = currentStamina;
             }
+        }
+
+        private void OnDashPerformed(InputAction.CallbackContext context)
+        {
+            if ((useMouseAndKeyboard && context.control.device is Keyboard) || (useGamepad && context.control.device is Gamepad))
+            {
+                TryDash();
+            }
+        }
+
+        private void OnDashButtonClicked()
+        {
+            TryDash();
         }
 
         private void TryDash()
@@ -132,6 +174,24 @@ namespace KinematicCharacterController.Examples
                 currentStamina += staminaRechargeRate * Time.deltaTime;
                 currentStamina = Mathf.Min(currentStamina, maxStamina);
                 yield return null;
+            }
+        }
+
+        private void OnSwitchToMouseAndKeyboard(InputAction.CallbackContext context)
+        {
+            if (context.control.device is Keyboard)
+            {
+                useMouseAndKeyboard = true;
+                useGamepad = false;
+            }
+        }
+
+        private void OnSwitchToGamepad(InputAction.CallbackContext context)
+        {
+            if (context.control.device is Gamepad)
+            {
+                useMouseAndKeyboard = false;
+                useGamepad = true;
             }
         }
 
