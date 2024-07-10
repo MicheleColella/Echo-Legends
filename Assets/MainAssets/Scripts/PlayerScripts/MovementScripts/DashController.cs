@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using MoreMountains.Tools;
 using UnityEngine.UI;
 
 namespace KinematicCharacterController.Examples
@@ -22,13 +23,14 @@ namespace KinematicCharacterController.Examples
         public float zeroStaminaRechargeDelay = 8f;
 
         [Header("UI Elements")]
-        public Slider staminaSlider;
+        public MMProgressBar staminaBar;
         public Button dashButton; // Button for mobile
 
         private ExampleCharacterController characterController;
         private KinematicCharacterMotor characterMotor;
         private float currentStamina;
         private bool canDash = true;
+        private bool isDashing = false;
         private Coroutine rechargeCoroutine;
         private Coroutine dashCoroutine;
 
@@ -36,16 +38,21 @@ namespace KinematicCharacterController.Examples
         private bool useMouseAndKeyboard = true;
         private bool useGamepad = false;
 
+        public bool IsDashing
+        {
+            get { return isDashing; }
+            private set { isDashing = value; }
+        }
+
         private void Awake()
         {
             characterController = GetComponent<ExampleCharacterController>();
             characterMotor = GetComponent<KinematicCharacterMotor>();
             currentStamina = maxStamina;
 
-            if (staminaSlider != null)
+            if (staminaBar != null)
             {
-                staminaSlider.maxValue = maxStamina;
-                staminaSlider.value = currentStamina;
+                staminaBar.UpdateBar(currentStamina, 0f, maxStamina);
             }
 
             playerInputActions = new InputActions();
@@ -79,9 +86,9 @@ namespace KinematicCharacterController.Examples
 
         private void Update()
         {
-            if (staminaSlider != null)
+            if (staminaBar != null)
             {
-                staminaSlider.value = currentStamina;
+                staminaBar.UpdateBar(currentStamina, 0f, maxStamina);
             }
         }
 
@@ -114,6 +121,7 @@ namespace KinematicCharacterController.Examples
                 currentStamina -= dashCost * dashFactor;
                 currentStamina = Mathf.Max(0, currentStamina);
                 canDash = false;
+                IsDashing = true; // Set the property to true when dashing
 
                 if (rechargeCoroutine != null)
                 {
@@ -156,6 +164,7 @@ namespace KinematicCharacterController.Examples
             }
 
             characterMotor.BaseVelocity = initialVelocity; // Reset velocity to the original after dash
+            IsDashing = false; // Reset the property to false when the dash is complete
         }
 
         private IEnumerator DashCooldown()
@@ -173,7 +182,16 @@ namespace KinematicCharacterController.Examples
             {
                 currentStamina += staminaRechargeRate * Time.deltaTime;
                 currentStamina = Mathf.Min(currentStamina, maxStamina);
+                UpdateStaminaBar(); // Aggiorna la barra della stamina gradualmente
                 yield return null;
+            }
+        }
+
+        private void UpdateStaminaBar()
+        {
+            if (staminaBar != null)
+            {
+                staminaBar.SetBar(currentStamina, 0f, maxStamina);
             }
         }
 
