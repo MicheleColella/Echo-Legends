@@ -2,12 +2,13 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using MoreMountains.Feedbacks;
+using MoreMountains.Tools;
 using System.Collections.Generic;
 
 public class WeaponUIManager : MonoBehaviour
 {
     public WeaponSystem weaponSystem; // Riferimento allo script WeaponSystem
-    public TextMeshProUGUI ammoText; // Riferimento al TextMeshPro per le munizioni
+    public MMProgressBar ammoProgressBar; // Riferimento alla barra di progresso per le munizioni
     public Image[] weaponIcons; // Riferimento agli Image per gli sprite delle armi
 
     public MMF_Player[] toMainTransitions; // Array per i feedback delle transizioni verso l'icona principale
@@ -20,6 +21,7 @@ public class WeaponUIManager : MonoBehaviour
 
     private void Start()
     {
+        ammoProgressBar.TextValueMultiplier = weaponSystem.maxAmmo;
         weaponSystem.OnWeaponChanged += UpdateWeaponIcons;
         UpdateWeaponIcons();
     }
@@ -36,8 +38,10 @@ public class WeaponUIManager : MonoBehaviour
 
     private void UpdateAmmoUI()
     {
-        // Aggiorna il testo delle munizioni con formato a 3 cifre
-        ammoText.text = $"{weaponSystem.currentAmmo.ToString("D3")}/{weaponSystem.maxAmmo.ToString("D3")}";
+        // Calcola il valore normalizzato delle munizioni
+        float normalizedAmmo = (float)weaponSystem.currentAmmo / (float)weaponSystem.maxAmmo;
+        // Aggiorna la barra di progresso con il valore normalizzato
+        ammoProgressBar.UpdateBar01(normalizedAmmo);
     }
 
     public void UpdateWeaponIcons()
