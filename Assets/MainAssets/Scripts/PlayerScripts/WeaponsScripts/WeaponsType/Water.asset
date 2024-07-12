@@ -15,13 +15,14 @@ MonoBehaviour:
   weaponName: Water
   damageRange: {x: 10, y: 20}
   fireRate: 2
+  weaponPrefab: {fileID: 1087392788168209010, guid: 14ddd56e585244586abf248b10038432,
+    type: 3}
+  weaponSprite: {fileID: 1396070358, guid: 6582f34ddd5f686408c019550cd94c9d, type: 3}
   projectilePrefab: {fileID: 3461241929686397981, guid: a52521dee5ae24ab4a04c5e14526af97,
     type: 3}
   projectileSpeed: 20
   projectilesPerShot: 5
   spreadAngle: 151
   recoilForce: 7
-  weaponPrefab: {fileID: 1087392788168209010, guid: 14ddd56e585244586abf248b10038432,
-    type: 3}
   ammoPerShot: 40
-  weaponSprite: {fileID: 1396070358, guid: 6582f34ddd5f686408c019550cd94c9d, type: 3}
+  weaponModel: {fileID: 0}

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5384400589495928942}
   - component: {fileID: 7414784371820468601}
   - component: {fileID: 6565736929350599046}
+  - component: {fileID: 1511060191078647909}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -127,6 +128,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1511060191078647909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3496820058411823536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 323b146c02c67497baf6f62eb31400d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3749950762416720490
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,11 +164,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3749950762416720490}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.4990664, y: 1.19, z: 0.042426318}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4322273300340631312}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

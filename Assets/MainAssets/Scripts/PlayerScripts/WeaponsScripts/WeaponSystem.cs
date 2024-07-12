@@ -26,6 +26,15 @@ public class WeaponSystem : MonoBehaviour
 
     public event Action OnWeaponChanged; // Evento per notificare il cambio dell'arma
 
+    // Aggiungere un campo per il GameObject target dove istanziare il modello dell'arma melee
+    public Transform meleeWeaponParent;
+
+    // Memorizza l'istanza del modello dell'arma melee attualmente equipaggiata
+    private GameObject currentMeleeWeaponModel;
+
+    // Riferimento all'Animator del modello dell'arma melee
+    private Animator currentMeleeWeaponAnimator;
+
     private void Awake()
     {
         playerInputActions = new InputActions();
@@ -79,6 +88,11 @@ public class WeaponSystem : MonoBehaviour
             (currentState == CheckInputManager.InputState.Gamepad && context.control.device is Gamepad))
         {
             isFiring = true;
+            // Se l'arma corrente è melee, avvia l'animazione di attacco
+            if (currentMeleeWeaponAnimator != null)
+            {
+                currentMeleeWeaponAnimator.SetBool("isAttacking", true);
+            }
         }
     }
 
@@ -90,6 +104,11 @@ public class WeaponSystem : MonoBehaviour
             (currentState == CheckInputManager.InputState.Gamepad && context.control.device is Gamepad))
         {
             isFiring = false;
+            // Se l'arma corrente è melee, ferma l'animazione di attacco
+            if (currentMeleeWeaponAnimator != null)
+            {
+                currentMeleeWeaponAnimator.SetBool("isAttacking", false);
+            }
         }
     }
 
@@ -99,17 +118,44 @@ public class WeaponSystem : MonoBehaviour
         {
             currentWeaponIndex = index;
             OnWeaponChanged?.Invoke(); // Notifica il cambio dell'arma
+
+            // Gestione del modello dell'arma melee
+            HandleMeleeWeaponModel();
+        }
+    }
+
+    private void HandleMeleeWeaponModel()
+    {
+        WeaponData currentWeapon = inventory[currentWeaponIndex];
+
+        // Rimuove il modello dell'arma melee corrente se esiste
+        if (currentMeleeWeaponModel != null)
+        {
+            Destroy(currentMeleeWeaponModel);
+        }
+
+        // Istanzia il modello dell'arma melee se l'arma corrente è di tipo melee
+        if (currentWeapon != null && currentWeapon.weaponModel != null)
+        {
+            currentMeleeWeaponModel = Instantiate(currentWeapon.weaponModel, meleeWeaponParent);
+
+            // Ottieni l'Animator del modello dell'arma melee
+            currentMeleeWeaponAnimator = currentMeleeWeaponModel.GetComponentInChildren<Animator>();
+
+            // Aggiungi il componente MeleeWeapon
+            MeleeWeapon meleeWeaponComponent = currentMeleeWeaponModel.AddComponent<MeleeWeapon>();
         }
     }
 
     public void FireWeapon()
     {
-        if (inventory[currentWeaponIndex] == null)
+        WeaponData currentWeapon = inventory[currentWeaponIndex];
+
+        // Se l'arma è di tipo melee, non eseguire la logica di sparo dei proiettili
+        if (currentWeapon == null || currentWeapon.weaponModel != null)
         {
             return;
         }
-
-        WeaponData currentWeapon = inventory[currentWeaponIndex];
 
         if (currentAmmo < currentWeapon.ammoPerShot)
         {
@@ -209,6 +255,7 @@ public class WeaponSystem : MonoBehaviour
             {
                 inventory[i] = weapon;
                 OnWeaponChanged?.Invoke(); // Notifica il cambio dell'arma
+                SelectWeapon(currentWeaponIndex); // Assicurati di selezionare l'arma corrente
                 return;
             }
         }
@@ -218,6 +265,7 @@ public class WeaponSystem : MonoBehaviour
 
         DropCurrentWeapon(droppedWeapon);
         OnWeaponChanged?.Invoke(); // Notifica il cambio dell'arma
+        SelectWeapon(currentWeaponIndex); // Assicurati di selezionare l'arma corrente
     }
 
     private void DropCurrentWeapon(WeaponData droppedWeapon)

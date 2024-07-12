@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d53e1de2d5d84008ae70a4ccacae6a6, type: 3}
+  m_Name: MeleeWeapon
+  m_EditorClassIdentifier: 
+  weaponName: MeleeWeapon
+  damageRange: {x: 10, y: 30}
+  fireRate: 4
+  weaponPrefab: {fileID: 1398493923746054554, guid: 7a1f2ae0741ab4e14bbec853ff08d015,
+    type: 3}
+  weaponSprite: {fileID: 1463657965, guid: 6582f34ddd5f686408c019550cd94c9d, type: 3}
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 0
+  projectilesPerShot: 0
+  spreadAngle: 0
+  recoilForce: 0
+  ammoPerShot: 0
+  weaponModel: {fileID: 3749950762416720490, guid: a000ff07a5cbd43d4bd070a33e94b270,
+    type: 3}
