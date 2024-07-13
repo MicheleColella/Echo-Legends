@@ -25,6 +25,7 @@ namespace KinematicCharacterController.Examples
         [Header("UI Elements")]
         public MMProgressBar staminaBar;
         public Button dashButton; // Button for mobile
+        public RectTransform[] staminaRects;
 
         private ExampleCharacterController characterController;
         private KinematicCharacterMotor characterMotor;
@@ -56,6 +57,12 @@ namespace KinematicCharacterController.Examples
             }
 
             playerInputActions = new InputActions();
+            UpdateRectTransforms();
+        }
+
+        private void Start()
+        {
+            staminaBar.TextValueMultiplier = maxStamina;
         }
 
         private void OnEnable()
@@ -221,6 +228,14 @@ namespace KinematicCharacterController.Examples
         public void SetCurrentStamina(float value)
         {
             currentStamina = value;
+        }
+
+        void UpdateRectTransforms()
+        {
+            foreach (RectTransform rect in staminaRects)
+            {
+                rect.sizeDelta = new Vector2(maxStamina, rect.sizeDelta.y);
+            }
         }
     }
 }

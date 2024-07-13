@@ -10,6 +10,7 @@ public class WeaponUIManager : MonoBehaviour
     public WeaponSystem weaponSystem; // Riferimento allo script WeaponSystem
     public MMProgressBar ammoProgressBar; // Riferimento alla barra di progresso per le munizioni
     public Image[] weaponIcons; // Riferimento agli Image per gli sprite delle armi
+    public RectTransform[] ammoRects;
 
     public MMF_Player[] toMainTransitions; // Array per i feedback delle transizioni verso l'icona principale
     public MMF_Player[] toLeftTransitions; // Array per i feedback delle transizioni verso l'icona sinistra
@@ -24,6 +25,7 @@ public class WeaponUIManager : MonoBehaviour
         ammoProgressBar.TextValueMultiplier = weaponSystem.maxAmmo;
         weaponSystem.OnWeaponChanged += UpdateWeaponIcons;
         UpdateWeaponIcons();
+        UpdateRectTransforms();
     }
 
     private void OnDestroy()
@@ -86,5 +88,13 @@ public class WeaponUIManager : MonoBehaviour
         weaponImages[currentWeaponIndex].transform.SetSiblingIndex(2); // Portalo in cima
         weaponImages[nextWeaponIndex].transform.SetSiblingIndex(1); // Porta il prossimo in mezzo
         weaponImages[prevWeaponIndex].transform.SetSiblingIndex(0); // Porta il precedente in fondo
+    }
+
+    void UpdateRectTransforms()
+    {
+        foreach (RectTransform rect in ammoRects)
+        {
+            rect.sizeDelta = new Vector2(weaponSystem.maxAmmo, rect.sizeDelta.y);
+        }
     }
 }
