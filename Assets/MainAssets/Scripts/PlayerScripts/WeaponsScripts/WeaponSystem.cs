@@ -35,10 +35,35 @@ public class WeaponSystem : MonoBehaviour
     // Riferimento all'Animator del modello dell'arma melee
     private Animator currentMeleeWeaponAnimator;
 
+    // Riferimento all'Animator del giocatore
+    public Animator playerAnimator; // Assicurati che l'Animator sia assegnato al player
+
+    // Variabili per il lerp del layer di sparo
+    private float shootingLayerWeight = 0f;
+    private float targetShootingLayerWeight = 0f;
+    public float lerpSpeed = 5f; // Velocità del lerp
+
     private void Awake()
     {
         playerInputActions = new InputActions();
     }
+
+    private void Start()
+    {
+        // Assicurati che l'Animator sia assegnato qui, quando tutti gli oggetti in scena sono stati inizializzati
+        if (playerAnimator == null)
+        {
+            playerAnimator = GetComponent<Animator>();
+            if (playerAnimator == null)
+            {
+                Debug.LogError("Animator non trovato!");
+            }
+        }
+
+        // Imposta il weight del layer di sparo a 0 all'inizio della scena
+        playerAnimator.SetLayerWeight(playerAnimator.GetLayerIndex("ShootingLayer"), 0f);
+    }
+
 
     private void OnEnable()
     {
@@ -69,6 +94,10 @@ public class WeaponSystem : MonoBehaviour
 
     private void Update()
     {
+        // Aggiorna il weight del layer di sparo con un lerp
+        shootingLayerWeight = Mathf.Lerp(shootingLayerWeight, targetShootingLayerWeight, Time.deltaTime * lerpSpeed);
+        playerAnimator.SetLayerWeight(playerAnimator.GetLayerIndex("ShootingLayer"), shootingLayerWeight);
+
         if (isFiring)
         {
             FireWeapon();
@@ -89,6 +118,8 @@ public class WeaponSystem : MonoBehaviour
         {
             isFiring = true;
             // Se l'arma corrente è melee, avvia l'animazione di attacco
+            targetShootingLayerWeight = 1f;
+
             if (currentMeleeWeaponAnimator != null)
             {
                 currentMeleeWeaponAnimator.SetBool("isAttacking", true);
@@ -105,6 +136,9 @@ public class WeaponSystem : MonoBehaviour
         {
             isFiring = false;
             // Se l'arma corrente è melee, ferma l'animazione di attacco
+
+            targetShootingLayerWeight = 0f;
+
             if (currentMeleeWeaponAnimator != null)
             {
                 currentMeleeWeaponAnimator.SetBool("isAttacking", false);
