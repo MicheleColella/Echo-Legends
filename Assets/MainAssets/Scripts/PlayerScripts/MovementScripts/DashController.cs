@@ -38,6 +38,9 @@ namespace KinematicCharacterController.Examples
         private InputActions playerInputActions;
         private bool useMouseAndKeyboard = true;
         private bool useGamepad = false;
+        private bool isMoving = false; // Aggiungi una variabile per tenere traccia del movimento
+
+        public Animator playerAnimator; // Aggiungi il riferimento all'Animator
 
         public bool IsDashing
         {
@@ -63,6 +66,16 @@ namespace KinematicCharacterController.Examples
         private void Start()
         {
             staminaBar.TextValueMultiplier = maxStamina;
+
+            // Assicurati che l'Animator sia assegnato
+            if (playerAnimator == null)
+            {
+                playerAnimator = GetComponent<Animator>();
+                if (playerAnimator == null)
+                {
+                    Debug.LogError("Animator non trovato sul GameObject.");
+                }
+            }
         }
 
         private void OnEnable()
@@ -71,6 +84,8 @@ namespace KinematicCharacterController.Examples
             playerInputActions.Player.Dash.performed += OnDashPerformed; // Use performed instead of canceled
             playerInputActions.Player.SwitchToMouseAndKeyboard.performed += OnSwitchToMouseAndKeyboard;
             playerInputActions.Player.SwitchToGamepad.performed += OnSwitchToGamepad;
+            playerInputActions.Player.Move.performed += OnMovePerformed; // Aggiungi un listener per il movimento
+            playerInputActions.Player.Move.canceled += OnMoveCanceled; // Aggiungi un listener per il movimento
 
             if (dashButton != null)
             {
@@ -84,6 +99,8 @@ namespace KinematicCharacterController.Examples
             playerInputActions.Player.Dash.performed -= OnDashPerformed;
             playerInputActions.Player.SwitchToMouseAndKeyboard.performed -= OnSwitchToMouseAndKeyboard;
             playerInputActions.Player.SwitchToGamepad.performed -= OnSwitchToGamepad;
+            playerInputActions.Player.Move.performed -= OnMovePerformed; // Rimuovi il listener per il movimento
+            playerInputActions.Player.Move.canceled -= OnMoveCanceled; // Rimuovi il listener per il movimento
 
             if (dashButton != null)
             {
@@ -114,6 +131,12 @@ namespace KinematicCharacterController.Examples
 
         private void TryDash()
         {
+            // Verifica se il giocatore si sta muovendo
+            if (!isMoving)
+            {
+                return; // Non eseguire il dash se il giocatore è fermo
+            }
+
             if (canDash && characterMotor.GroundingStatus.IsStableOnGround)
             {
                 float dashFactor = 1f;
@@ -122,13 +145,20 @@ namespace KinematicCharacterController.Examples
                     dashFactor = currentStamina / dashCost;
                 }
 
-                Vector3 dashDirection = characterMotor.BaseVelocity.normalized; // Use the player's movement direction
+                Vector3 dashDirection = GetDashDirection();
                 Vector3 dashVector = dashDirection * dashDistance * dashFactor;
 
                 currentStamina -= dashCost * dashFactor;
                 currentStamina = Mathf.Max(0, currentStamina);
                 canDash = false;
                 IsDashing = true; // Set the property to true when dashing
+
+                // Imposta i parametri dell'Animator
+                if (playerAnimator != null)
+                {
+                    playerAnimator.SetBool("isDashing", true);
+                    playerAnimator.SetFloat("DashDirection", GetAnimatorDashDirection(dashDirection));
+                }
 
                 if (rechargeCoroutine != null)
                 {
@@ -143,6 +173,30 @@ namespace KinematicCharacterController.Examples
                 dashCoroutine = StartCoroutine(PerformDash(dashVector));
                 rechargeCoroutine = StartCoroutine(RechargeStamina());
                 StartCoroutine(DashCooldown());
+            }
+        }
+
+        private Vector3 GetDashDirection()
+        {
+            Vector3 moveDirection = characterController.Motor.BaseVelocity.normalized;
+            if (moveDirection.sqrMagnitude == 0)
+            {
+                moveDirection = characterController.transform.forward;
+            }
+            return moveDirection;
+        }
+
+        private float GetAnimatorDashDirection(Vector3 dashDirection)
+        {
+            Vector3 localDashDirection = characterController.transform.InverseTransformDirection(dashDirection);
+
+            if (Mathf.Abs(localDashDirection.x) > Mathf.Abs(localDashDirection.z))
+            {
+                return localDashDirection.x > 0 ? 3 : 4; // 3 for right, 4 for left
+            }
+            else
+            {
+                return localDashDirection.z > 0 ? 1 : 2; // 1 for forward, 2 for backward
             }
         }
 
@@ -172,6 +226,12 @@ namespace KinematicCharacterController.Examples
 
             characterMotor.BaseVelocity = initialVelocity; // Reset velocity to the original after dash
             IsDashing = false; // Reset the property to false when the dash is complete
+
+            // Reset the animator parameter
+            if (playerAnimator != null)
+            {
+                playerAnimator.SetBool("isDashing", false);
+            }
         }
 
         private IEnumerator DashCooldown()
@@ -236,6 +296,18 @@ namespace KinematicCharacterController.Examples
             {
                 rect.sizeDelta = new Vector2(maxStamina, rect.sizeDelta.y);
             }
+        }
+
+        // Aggiungi listener per il movimento
+        private void OnMovePerformed(InputAction.CallbackContext context)
+        {
+            Vector2 moveInput = context.ReadValue<Vector2>();
+            isMoving = moveInput != Vector2.zero;
+        }
+
+        private void OnMoveCanceled(InputAction.CallbackContext context)
+        {
+            isMoving = false;
         }
     }
 }

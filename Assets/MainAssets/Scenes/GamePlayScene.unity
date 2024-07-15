@@ -521,7 +521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dashDistance: 5
   dashCooldown: 1
-  dashCost: 40
+  dashCost: 0
   partialDashMultiplier: 0.5
   dashDuration: 0.2
   airDashDeceleration: 10
@@ -536,6 +536,7 @@ MonoBehaviour:
   - {fileID: 216755181}
   - {fileID: 148758336}
   - {fileID: 187114625}
+  playerAnimator: {fileID: 553929913}
 --- !u!114 &80743947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3545,6 +3546,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 4b0b7ed70f922431389292a67c7eb5ae, type: 2}
+    - target: {fileID: 9500000, guid: d917c7129a9e4c74e84188b278d96de7, type: 3}
+      propertyPath: m_WarningMessage
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
