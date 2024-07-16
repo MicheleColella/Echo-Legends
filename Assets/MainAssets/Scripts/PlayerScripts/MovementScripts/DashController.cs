@@ -42,6 +42,9 @@ namespace KinematicCharacterController.Examples
 
         public Animator playerAnimator; // Aggiungi il riferimento all'Animator
 
+        private int enemyProjectileLayer;
+        private HealthSystem healthSystem; // Riferimento al sistema di salute
+
         public bool IsDashing
         {
             get { return isDashing; }
@@ -61,6 +64,9 @@ namespace KinematicCharacterController.Examples
 
             playerInputActions = new InputActions();
             UpdateRectTransforms();
+
+            enemyProjectileLayer = LayerMask.NameToLayer("EnemyProjectile");
+            healthSystem = GetComponent<HealthSystem>();
         }
 
         private void Start()
@@ -202,6 +208,10 @@ namespace KinematicCharacterController.Examples
 
         private IEnumerator PerformDash(Vector3 dashVector)
         {
+            // Inizia il dash disabilitando le collisioni con il layer EnemyProjectile
+            Physics.IgnoreLayerCollision(gameObject.layer, enemyProjectileLayer, true);
+            healthSystem.SetInvulnerable(true); // Rendi il giocatore invulnerabile ai danni
+
             float elapsedTime = 0f;
             Vector3 initialVelocity = characterMotor.BaseVelocity;
             while (elapsedTime < dashDuration)
@@ -232,6 +242,10 @@ namespace KinematicCharacterController.Examples
             {
                 playerAnimator.SetBool("isDashing", false);
             }
+
+            // Termina il dash riabilitando le collisioni con il layer EnemyProjectile
+            Physics.IgnoreLayerCollision(gameObject.layer, enemyProjectileLayer, false);
+            healthSystem.SetInvulnerable(false); // Rendi il giocatore vulnerabile ai danni
         }
 
         private IEnumerator DashCooldown()

@@ -9,6 +9,8 @@ public class HealthSystem : MonoBehaviour
     public MMProgressBar healthBar;
     public RectTransform[] healthRects;
 
+    private bool isInvulnerable = false;
+
     void Start()
     {
         healthBar.TextValueMultiplier = maxHealth;
@@ -35,6 +37,11 @@ public class HealthSystem : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (isInvulnerable)
+        {
+            return; // Non subire danno se invulnerabile
+        }
+
         currentHealth -= damage;
         if (currentHealth < 0)
         {
@@ -79,5 +86,10 @@ public class HealthSystem : MonoBehaviour
         {
             rect.sizeDelta = new Vector2(maxHealth, rect.sizeDelta.y);
         }
+    }
+
+    public void SetInvulnerable(bool value)
+    {
+        isInvulnerable = value;
     }
 }
