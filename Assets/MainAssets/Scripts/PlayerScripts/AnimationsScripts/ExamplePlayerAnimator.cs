@@ -14,6 +14,10 @@ namespace KinematicCharacterController.Examples
         private Vector2 moveInput;
         private Camera mainCamera;
 
+        private float airTimeThreshold = 0.2f; // Tempo in secondi per considerare il giocatore non a terra
+        private float airTime = 0.0f; // Timer per il tempo trascorso in aria
+        private bool isGrounded = true;
+
         private void Awake()
         {
             playerInputActions = new InputActions();
@@ -40,6 +44,7 @@ namespace KinematicCharacterController.Examples
 
         private void Update()
         {
+            UpdateGroundedStatus();
             UpdateAnimator();
             UpdateLookDirection();
         }
@@ -54,18 +59,53 @@ namespace KinematicCharacterController.Examples
             // Handle look input
         }
 
+        private void UpdateGroundedStatus()
+        {
+            bool isCurrentlyGrounded = characterController.Motor.GroundingStatus.IsStableOnGround;
+
+            if (isCurrentlyGrounded)
+            {
+                airTime = 0.0f;
+                isGrounded = true;
+            }
+            else
+            {
+                airTime += Time.deltaTime;
+                if (airTime > airTimeThreshold)
+                {
+                    isGrounded = false;
+                }
+            }
+        }
+
         private void UpdateAnimator()
         {
             float moveX = moveInput.x;
             float moveY = moveInput.y;
             bool isMoving = moveX != 0 || moveY != 0;
-            bool isGrounded = characterController.Motor.GroundingStatus.IsStableOnGround;
+
+            bool isCurrentlyGrounded = characterController.Motor.GroundingStatus.IsStableOnGround;
+
+            if (isCurrentlyGrounded)
+            {
+                airTime = 0.0f;
+                isGrounded = true;
+            }
+            else
+            {
+                airTime += Time.deltaTime;
+                if (airTime > airTimeThreshold)
+                {
+                    isGrounded = false;
+                }
+            }
 
             animator.SetFloat("MoveX", moveX);
             animator.SetFloat("MoveY", moveY);
             animator.SetBool("isMoving", isMoving);
             animator.SetBool("isGrounded", isGrounded);
         }
+
 
         private void UpdateLookDirection()
         {
