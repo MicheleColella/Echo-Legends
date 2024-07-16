@@ -2,14 +2,23 @@ using UnityEngine;
 
 public class MeleeWeapon : MonoBehaviour
 {
+    public WeaponData weaponData; // Riferimento allo ScriptableObject WeaponData
     private bool canDealDamage = false;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (canDealDamage && other.CompareTag("Enemy"))
         {
-            Debug.Log("Hit enemy: " + other.name);
-            // Implementa qui la logica di danno al nemico
+            float damage = Random.Range(weaponData.damageRange.x, weaponData.damageRange.y);
+            EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage((int)damage);
+                Debug.Log("Hit enemy: " + other.name + " with damage: " + damage);
+
+                // Disabilitare il danno per evitare colpi multipli nello stesso frame
+                canDealDamage = false;
+            }
         }
     }
 

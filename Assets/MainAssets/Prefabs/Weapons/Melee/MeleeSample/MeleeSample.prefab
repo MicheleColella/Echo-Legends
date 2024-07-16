@@ -105,8 +105,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.9615674, y: 1.1860352, z: 1.72741}
+  m_Center: {x: 0.15950803, y: 0.09302021, z: 0.36370486}
 --- !u!95 &6565736929350599046
 Animator:
   serializedVersion: 5
@@ -140,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 323b146c02c67497baf6f62eb31400d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponData: {fileID: 11400000, guid: eb118942a8149468e87efb8f18288dee, type: 2}
 --- !u!1 &3749950762416720490
 GameObject:
   m_ObjectHideFlags: 0
