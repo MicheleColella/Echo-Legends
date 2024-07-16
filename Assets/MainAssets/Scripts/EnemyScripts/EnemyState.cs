@@ -5,5 +5,6 @@ public enum EnemyState
     ActiveMove,
     Dodging,
     Retreating,
+    Searching, // Nuovo stato per inseguimento senza visione
     Idle
 }

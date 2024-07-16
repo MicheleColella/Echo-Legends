@@ -43,16 +43,29 @@ public class EnemyAI : MonoBehaviour
 
             if (distanceToPlayer < enemyMovement.retreatDistance)
             {
-                if (!enemyAttack.IsBursting()) // Verifica se non sta già attaccando
+                if (!enemyAttack.IsBursting())
                 {
-                    enemyAttack.StartBurst(); // Inizia l'attacco burst
+                    enemyAttack.StartBurst();
                 }
             }
         }
         else
         {
+            if (enemyMovement.currentState == EnemyState.Chasing && Time.time > enemyMovement.chaseStartTime + enemyMovement.chaseDuration)
+            {
+                enemyMovement.StartSearching();
+            }
+            else if (enemyMovement.currentState == EnemyState.Searching && Time.time > enemyMovement.searchStartTime + enemyMovement.searchDuration)
+            {
+                enemyMovement.StartPatrolling();
+            }
+
             enemyAttack.StopBurst();
-            enemyMovement.currentState = EnemyState.Patrolling;
+        }
+
+        if (enemyMovement.currentState == EnemyState.Searching)
+        {
+            enemyMovement.LookAtDestination();
         }
     }
 

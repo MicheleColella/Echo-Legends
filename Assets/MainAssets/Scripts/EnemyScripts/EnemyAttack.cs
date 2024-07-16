@@ -6,10 +6,10 @@ public class EnemyAttack : MonoBehaviour
     [Header("Attack Settings")]
     public GameObject projectilePrefab;
     public Transform firePoint;
-    public float fireRate = 5f; // Proiettili al secondo durante il burst
-    public float burstDuration = 3f; // Durata del burst in secondi
-    public float burstCooldown = 5f; // Tempo di cooldown tra i burst in secondi
-    public float projectileSpeed = 10f; // Velocità del proiettile
+    public float fireRate = 5f;
+    public float burstDuration = 3f;
+    public float burstCooldown = 5f;
+    public float projectileSpeed = 10f;
     public Transform player;
     public LayerMask obstacleLayer;
 

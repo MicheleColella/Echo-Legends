@@ -408,19 +408,23 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 1048577
-  patrolRadius: 30
+  patrolRadius: 25
   approachDistance: 20
-  strafeDistance: 8
+  strafeDistance: 12.24
   dodgeDistance: 5
   retreatDistance: 15
   dashDistance: 3
   dashSpeed: 15
-  lookSpeed: 10
+  lookSpeed: 20
   chaseDuration: 5
   dodgeProbability: 0.3
   activeMoveDuration: 3
+  searchDuration: 5
+  maxTimeToReachDestination: 2
   disableLogic: 0
+  chaseStartTime: 0
   currentState: 0
+  searchStartTime: 0
 --- !u!114 &41213664
 MonoBehaviour:
   m_ObjectHideFlags: 0

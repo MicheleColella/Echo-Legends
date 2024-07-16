@@ -10,17 +10,19 @@ public class EnemyMovement : MonoBehaviour
     public LayerMask obstacleLayer;
 
     [Header("Movement Settings")]
-    public float patrolRadius = 20f;
-    public float approachDistance = 24f; // Valore aggiornato
-    public float strafeDistance = 10f; // Valore aggiornato
-    public float dodgeDistance = 6f; // Valore aggiornato
-    public float retreatDistance = 14f; // Valore aggiornato
-    public float dashDistance = 2f; // Valore aggiornato
-    public float dashSpeed = 10f; // Valore aggiornato
-    public float lookSpeed = 20f; // Valore aggiornato
-    public float chaseDuration = 3f; // Valore aggiornato
-    public float dodgeProbability = 0.2f; // Valore aggiornato
-    public float activeMoveDuration = 2f; // Valore aggiornato
+    public float patrolRadius = 30f;
+    public float approachDistance = 20f;
+    public float strafeDistance = 8f;
+    public float dodgeDistance = 5f;
+    public float retreatDistance = 15f;
+    public float dashDistance = 3f;
+    public float dashSpeed = 15f;
+    public float lookSpeed = 10f;
+    public float chaseDuration = 5f;
+    public float dodgeProbability = 0.3f;
+    public float activeMoveDuration = 3f;
+    public float searchDuration = 5f;
+    public float maxTimeToReachDestination = 2f;
 
     [Header("Debug Settings")]
     public bool disableLogic = false;
@@ -30,11 +32,13 @@ public class EnemyMovement : MonoBehaviour
     private bool isDashing = false;
     private Vector3 dashDirection;
     private bool isChasing = false;
-    private float chaseStartTime;
+    public float chaseStartTime;
     public EnemyState currentState;
 
     private bool isStrafing = false;
     private float nextActiveMoveTime = 0f;
+    public float searchStartTime;
+    private float destinationStartTime;
 
     void Start()
     {
@@ -64,15 +68,20 @@ public class EnemyMovement : MonoBehaviour
             case EnemyState.Retreating:
                 Retreat();
                 break;
+            case EnemyState.Searching:
+                SearchPlayer();
+                break;
             case EnemyState.Idle:
                 // Stato inattivo
                 break;
         }
 
-        if (currentState != EnemyState.Chasing && currentState != EnemyState.Patrolling)
+        if (currentState != EnemyState.Chasing && currentState != EnemyState.Patrolling && currentState != EnemyState.Searching)
         {
             LookAtPlayer();
         }
+
+        CheckDestinationTimeout();
     }
 
     void SetRandomPatrolTarget()
@@ -83,6 +92,33 @@ public class EnemyMovement : MonoBehaviour
         if (NavMesh.SamplePosition(randomDirection, out hit, patrolRadius, NavMesh.AllAreas))
         {
             patrolTarget = hit.position;
+        }
+        destinationStartTime = Time.time;
+    }
+
+    void CheckDestinationTimeout()
+    {
+        if (Time.time > destinationStartTime + maxTimeToReachDestination)
+        {
+            switch (currentState)
+            {
+                case EnemyState.Patrolling:
+                    SetRandomPatrolTarget();
+                    break;
+                case EnemyState.Chasing:
+                    agent.SetDestination(player.position);
+                    destinationStartTime = Time.time;
+                    break;
+                case EnemyState.ActiveMove:
+                    StartActiveMove();
+                    break;
+                case EnemyState.Retreating:
+                    Retreat();
+                    break;
+                case EnemyState.Searching:
+                    StartSearching();
+                    break;
+            }
         }
     }
 
@@ -105,16 +141,17 @@ public class EnemyMovement : MonoBehaviour
         isChasing = true;
         chaseStartTime = Time.time;
         currentState = EnemyState.Chasing;
+        destinationStartTime = Time.time;
     }
 
     public void ChasePlayer()
     {
         if (Time.time > chaseStartTime + chaseDuration)
         {
-            StartPatrolling();
+            StartSearching();
             return;
         }
-        agent.isStopped = false; // Assicuriamoci che l'agente non sia fermo
+        agent.isStopped = false;
         agent.SetDestination(player.position);
 
         if (Vector3.Distance(transform.position, player.position) < approachDistance)
@@ -123,11 +160,34 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    public void StartSearching()
+    {
+        currentState = EnemyState.Searching;
+        searchStartTime = Time.time;
+        destinationStartTime = Time.time;
+    }
+
+    public void SearchPlayer()
+    {
+        if (Time.time > searchStartTime + searchDuration)
+        {
+            StartPatrolling();
+            return;
+        }
+        agent.SetDestination(player.position);
+
+        if (CanSeePlayer())
+        {
+            StartChasing();
+        }
+    }
+
     public void StartActiveMove()
     {
         currentState = EnemyState.ActiveMove;
         agent.isStopped = false;
         nextActiveMoveTime = Time.time + activeMoveDuration;
+        destinationStartTime = Time.time;
     }
 
     public void StartPatrolling()
@@ -135,6 +195,7 @@ public class EnemyMovement : MonoBehaviour
         isChasing = false;
         currentState = EnemyState.Patrolling;
         agent.isStopped = false;
+        SetRandomPatrolTarget();
     }
 
     void LookAtPlayer()
@@ -168,7 +229,7 @@ public class EnemyMovement : MonoBehaviour
 
         if (!CanSeePlayer())
         {
-            StartPatrolling();
+            StartSearching();
         }
     }
 
@@ -176,6 +237,7 @@ public class EnemyMovement : MonoBehaviour
     {
         Vector3 retreatDirection = (transform.position - player.position).normalized;
         agent.SetDestination(transform.position + retreatDirection * retreatDistance);
+        destinationStartTime = Time.time;
     }
 
     [Button]
@@ -184,7 +246,7 @@ public class EnemyMovement : MonoBehaviour
         if (!disableLogic && Random.value <= dodgeProbability)
         {
             Vector3 dodgeDirection = Vector3.Cross(Vector3.up, (player.position - transform.position)).normalized;
-            dodgeDirection *= Random.Range(0, 2) == 0 ? 1 : -1; // Decide se fare dodge a destra o a sinistra
+            dodgeDirection *= Random.Range(0, 2) == 0 ? 1 : -1;
             StartDash(dodgeDirection);
         }
     }
@@ -256,5 +318,13 @@ public class EnemyMovement : MonoBehaviour
     {
         Vector3 strafeDirection = Vector3.Cross(Vector3.up, (player.position - transform.position)).normalized;
         agent.SetDestination(transform.position + strafeDirection * strafeDistance);
+        destinationStartTime = Time.time;
+    }
+
+    public void LookAtDestination()
+    {
+        Vector3 direction = (agent.destination - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookSpeed);
     }
 }
