@@ -1,3 +1,4 @@
+// File: EnemyAI.cs
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour

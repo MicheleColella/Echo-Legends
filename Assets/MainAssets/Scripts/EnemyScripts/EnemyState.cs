@@ -1,3 +1,4 @@
+// File: EnemyState.cs
 public enum EnemyState
 {
     Patrolling,
@@ -5,6 +6,6 @@ public enum EnemyState
     ActiveMove,
     Dodging,
     Retreating,
-    Searching, // Nuovo stato per inseguimento senza visione
+    Searching,
     Idle
 }

@@ -1,7 +1,9 @@
+// File: EnemyMovement.cs
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using VInspector;
+using TMPro;
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -26,6 +28,9 @@ public class EnemyMovement : MonoBehaviour
 
     [Header("Debug Settings")]
     public bool disableLogic = false;
+    public bool debugActive = false;
+    public GameObject debugStateText;
+    public GameObject debugVisibilityText;
 
     private NavMeshAgent agent;
     private Vector3 patrolTarget;
@@ -45,6 +50,12 @@ public class EnemyMovement : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         SetRandomPatrolTarget();
         currentState = EnemyState.Patrolling;
+
+        if (debugStateText != null && debugVisibilityText != null)
+        {
+            debugStateText.SetActive(debugActive);
+            debugVisibilityText.SetActive(debugActive);
+        }
     }
 
     void Update()
@@ -82,6 +93,12 @@ public class EnemyMovement : MonoBehaviour
         }
 
         CheckDestinationTimeout();
+
+        if (debugActive && debugStateText != null && debugVisibilityText != null)
+        {
+            debugStateText.GetComponent<TMP_Text>().text = "State: " + currentState.ToString();
+            debugVisibilityText.GetComponent<TMP_Text>().text = "Can See Player: " + CanSeePlayer();
+        }
     }
 
     void SetRandomPatrolTarget()
@@ -312,6 +329,12 @@ public class EnemyMovement : MonoBehaviour
 
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, approachDistance);
+
+        if (CanSeePlayer())
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, player.position);
+        }
     }
 
     void Strafe()
