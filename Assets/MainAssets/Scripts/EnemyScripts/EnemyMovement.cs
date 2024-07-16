@@ -171,9 +171,19 @@ public class EnemyMovement : MonoBehaviour
         agent.isStopped = false;
         agent.SetDestination(player.position);
 
-        if (Vector3.Distance(transform.position, player.position) < approachDistance)
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer < approachDistance)
         {
             StartActiveMove();
+        }
+        else if (distanceToPlayer < retreatDistance)
+        {
+            currentState = EnemyState.Retreating;
+        }
+        else
+        {
+            currentState = EnemyState.Chasing;
         }
     }
 
@@ -252,6 +262,14 @@ public class EnemyMovement : MonoBehaviour
 
     public void Retreat()
     {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer >= retreatDistance)
+        {
+            StartChasing();
+            return;
+        }
+
         Vector3 retreatDirection = (transform.position - player.position).normalized;
         agent.SetDestination(transform.position + retreatDirection * retreatDistance);
         destinationStartTime = Time.time;

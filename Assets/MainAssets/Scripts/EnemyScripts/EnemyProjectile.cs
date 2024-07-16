@@ -48,7 +48,7 @@ public class EnemyProjectile : MonoBehaviour, IDespawnedPoolObject, IRetrievedPo
             if (playerHealth != null)
             {
                 float damage = Random.Range(damageRange.x, damageRange.y); // Calcola un danno casuale
-                Debug.Log($"Projectile hit the player for {damage} damage!");
+                //Debug.Log($"Projectile hit the player for {damage} damage!");
                 playerHealth.TakeDamage(damage);
             }
             else

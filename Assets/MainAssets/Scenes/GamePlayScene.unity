@@ -409,13 +409,13 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 1048577
-  patrolRadius: 25
-  approachDistance: 20
-  strafeDistance: 12.24
-  dodgeDistance: 5
-  retreatDistance: 15
-  dashDistance: 3
-  dashSpeed: 15
+  patrolRadius: 17.361109
+  approachDistance: 20.833334
+  strafeDistance: 10.416667
+  dodgeDistance: 4.8611107
+  retreatDistance: 13.888891
+  dashDistance: 3.4722226
+  dashSpeed: 20
   lookSpeed: 20
   chaseDuration: 5
   dodgeProbability: 0.3

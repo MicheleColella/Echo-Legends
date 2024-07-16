@@ -35,11 +35,17 @@ public class EnemyAI : MonoBehaviour
             }
             else if (distanceToPlayer < enemyMovement.retreatDistance)
             {
-                enemyMovement.currentState = EnemyState.Retreating;
+                if (enemyMovement.currentState != EnemyState.Retreating)
+                {
+                    enemyMovement.currentState = EnemyState.Retreating;
+                }
             }
             else
             {
-                enemyMovement.currentState = EnemyState.Chasing;
+                if (enemyMovement.currentState != EnemyState.Chasing)
+                {
+                    enemyMovement.currentState = EnemyState.Chasing;
+                }
             }
 
             if (distanceToPlayer < enemyMovement.retreatDistance)
@@ -69,6 +75,7 @@ public class EnemyAI : MonoBehaviour
             enemyMovement.LookAtDestination();
         }
     }
+
 
     void OnTriggerEnter(Collider other)
     {
