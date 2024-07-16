@@ -150,4 +150,4 @@ MonoBehaviour:
   lifeTime: 4
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 1048576
+    m_Bits: 1064960

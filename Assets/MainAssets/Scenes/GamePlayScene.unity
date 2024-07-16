@@ -259,9 +259,9 @@ GameObject:
   - component: {fileID: 41213663}
   - component: {fileID: 41213662}
   - component: {fileID: 41213661}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -468,7 +468,7 @@ GameObject:
   - component: {fileID: 80743948}
   m_Layer: 3
   m_Name: ExampleCharacter
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1335,7 +1335,7 @@ GameObject:
   - component: {fileID: 143334144}
   - component: {fileID: 143334143}
   - component: {fileID: 143334142}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: DebugState
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4585,7 +4585,7 @@ GameObject:
   - component: {fileID: 528316344}
   - component: {fileID: 528316346}
   - component: {fileID: 528316345}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11819,7 +11819,7 @@ GameObject:
   - component: {fileID: 1394812362}
   - component: {fileID: 1394812364}
   - component: {fileID: 1394812363}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11975,7 +11975,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1445927900}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Debug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12563,7 +12563,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1622926970}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12754,7 +12754,7 @@ GameObject:
   - component: {fileID: 1676174428}
   - component: {fileID: 1676174427}
   - component: {fileID: 1676174426}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: DebugVisibility
   m_TagString: Untagged
   m_Icon: {fileID: 0}

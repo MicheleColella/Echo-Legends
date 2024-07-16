@@ -1,6 +1,6 @@
-// File: EnemyAttack.cs
 using UnityEngine;
 using VInspector;
+using MidniteOilSoftware.ObjectPoolManager;
 
 public class EnemyAttack : MonoBehaviour
 {
@@ -59,7 +59,7 @@ public class EnemyAttack : MonoBehaviour
     {
         if (Time.time >= nextFireTime)
         {
-            GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+            GameObject projectile = ObjectPoolManager.SpawnGameObject(projectilePrefab, firePoint.position, firePoint.rotation);
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
             if (rb != null)
             {
