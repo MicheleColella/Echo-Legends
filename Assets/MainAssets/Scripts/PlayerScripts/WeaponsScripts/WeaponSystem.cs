@@ -17,7 +17,6 @@ public class WeaponSystem : MonoBehaviour
     private bool isFiring = false; // Stato di fuoco continuo
 
     public bool isMobileFiring = false;
-    public LayerMask collisionLayers; // LayerMask dei layer con cui i proiettili possono collidere
 
     private InputActions playerInputActions;
 
@@ -232,7 +231,6 @@ public class WeaponSystem : MonoBehaviour
                 }
 
                 projectile.Initialize(currentWeapon.damageRange, transform);
-                projectile.collisionLayers = collisionLayers; // Assegna i layer con cui può collidere
             }
 
             currentAmmo -= currentWeapon.ammoPerShot;

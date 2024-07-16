@@ -9,7 +9,6 @@ public class Projectile : MonoBehaviour, IDespawnedPoolObject, IRetrievedPoolObj
     private Transform playerTransform; // Riferimento al player
 
     private Rigidbody rb; // Riferimento al componente Rigidbody
-    public LayerMask collisionLayers; // LayerMask dei layer con cui il proiettile può collidere
     private Collider projectileCollider; // Riferimento al Collider
 
     void Awake()
@@ -43,16 +42,13 @@ public class Projectile : MonoBehaviour, IDespawnedPoolObject, IRetrievedPoolObj
             return;
         }
 
-        if (((1 << collision.gameObject.layer) & collisionLayers) != 0)
+        EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
+        if (enemyHealth != null)
         {
-            EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
-            if (enemyHealth != null)
-            {
-                enemyHealth.TakeDamage((int)totalDamage);
-            }
-
-            DespawnProjectile();
+            enemyHealth.TakeDamage((int)totalDamage);
         }
+
+        DespawnProjectile();
     }
 
     public void Initialize(Vector2 weaponDamageRange, Transform playerTransform)
