@@ -8,9 +8,12 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] // Aggiungi questo attributo per visualizzare il campo nell'Inspector
     private int currentHealth;
 
+    private EnemyDropSystem dropSystem;
+
     void Start()
     {
         currentHealth = maxHealth;
+        dropSystem = GetComponent<EnemyDropSystem>();
     }
 
     public void TakeDamage(int damage)
@@ -24,6 +27,10 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
+        if (dropSystem != null)
+        {
+            dropSystem.DropItems();
+        }
         Destroy(gameObject);
     }
 }
