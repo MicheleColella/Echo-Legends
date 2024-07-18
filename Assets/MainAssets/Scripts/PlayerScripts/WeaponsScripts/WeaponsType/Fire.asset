@@ -15,13 +15,14 @@ MonoBehaviour:
   weaponName: Fire
   damageRange: {x: 10, y: 20}
   fireRate: 3
+  weaponPrefab: {fileID: 1087392788168209010, guid: a2656307eacfd4f55b6d0033f2dba47c,
+    type: 3}
+  weaponSprite: {fileID: 2128112624, guid: 6582f34ddd5f686408c019550cd94c9d, type: 3}
   projectilePrefab: {fileID: 3461241929686397981, guid: a52521dee5ae24ab4a04c5e14526af97,
     type: 3}
   projectileSpeed: 20
   projectilesPerShot: 1
   spreadAngle: 0
   recoilForce: 5
-  weaponPrefab: {fileID: 1087392788168209010, guid: a2656307eacfd4f55b6d0033f2dba47c,
-    type: 3}
-  ammoPerShot: 10
-  weaponSprite: {fileID: 2128112624, guid: 6582f34ddd5f686408c019550cd94c9d, type: 3}
+  ammoPerShot: 1
+  weaponModel: {fileID: 0}

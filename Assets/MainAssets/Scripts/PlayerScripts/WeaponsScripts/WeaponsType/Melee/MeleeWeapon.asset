@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MeleeWeapon
   m_EditorClassIdentifier: 
   weaponName: MeleeWeapon
-  damageRange: {x: 10, y: 30}
+  damageRange: {x: 30, y: 40}
   fireRate: 4
   weaponPrefab: {fileID: 1398493923746054554, guid: 7a1f2ae0741ab4e14bbec853ff08d015,
     type: 3}

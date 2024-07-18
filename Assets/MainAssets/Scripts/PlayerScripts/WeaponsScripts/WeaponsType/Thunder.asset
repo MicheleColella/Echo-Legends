@@ -15,13 +15,14 @@ MonoBehaviour:
   weaponName: Thunder
   damageRange: {x: 15, y: 30}
   fireRate: 3
+  weaponPrefab: {fileID: 1087392788168209010, guid: 242b95897dd5c4995ae8f17b7f597762,
+    type: 3}
+  weaponSprite: {fileID: -607652506, guid: 6582f34ddd5f686408c019550cd94c9d, type: 3}
   projectilePrefab: {fileID: 3461241929686397981, guid: a52521dee5ae24ab4a04c5e14526af97,
     type: 3}
   projectileSpeed: 40
   projectilesPerShot: 8
   spreadAngle: 249
   recoilForce: 7
-  weaponPrefab: {fileID: 1087392788168209010, guid: 242b95897dd5c4995ae8f17b7f597762,
-    type: 3}
-  ammoPerShot: 50
-  weaponSprite: {fileID: -607652506, guid: 6582f34ddd5f686408c019550cd94c9d, type: 3}
+  ammoPerShot: 4
+  weaponModel: {fileID: 0}
