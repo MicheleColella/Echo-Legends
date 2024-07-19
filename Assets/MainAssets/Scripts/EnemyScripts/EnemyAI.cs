@@ -1,4 +1,3 @@
-// File: EnemyAI.cs
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -11,7 +10,9 @@ public class EnemyAI : MonoBehaviour
     {
         enemyMovement = GetComponent<EnemyMovement>();
         enemyAttack = GetComponent<EnemyAttack>();
-        player = enemyMovement.player;
+        player = GameObject.FindWithTag("Player").transform;
+        enemyMovement.player = player;
+        enemyAttack.player = player;
     }
 
     void Update()

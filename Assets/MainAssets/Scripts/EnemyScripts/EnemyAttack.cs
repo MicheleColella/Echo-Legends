@@ -19,6 +19,11 @@ public class EnemyAttack : MonoBehaviour
     private float burstEndTime = 0f;
     private float nextFireTime = 0f;
 
+    void Start()
+    {
+        player = GameObject.FindWithTag("Player").transform;
+    }
+
     void Update()
     {
         if (isBursting)

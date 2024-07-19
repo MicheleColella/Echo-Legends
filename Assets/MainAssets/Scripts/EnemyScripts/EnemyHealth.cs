@@ -33,6 +33,9 @@ public class EnemyHealth : MonoBehaviour
         enemyCollider = GetComponent<Collider>();
         enemyAnimatorController = GetComponent<EnemyAnimatorController>();
         navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+
+        enemyMovement.player = GameObject.FindWithTag("Player").transform;
+        enemyAttack.player = enemyMovement.player;
     }
 
     public void TakeDamage(int damage)
@@ -84,8 +87,8 @@ public class EnemyHealth : MonoBehaviour
         animator.SetTrigger("Die");
         float deathAnimationDuration = GetAnimationClipDuration(deathAnimationName);
 
-        // Start coroutine to reset shoot layer weight and destroy or disable object
-        StartCoroutine(ResetShootLayerWeightAndHandleDeath(deathAnimationDuration));
+        // Start coroutine to reset shoot layer weight and handle object after death
+        StartCoroutine(HandleDeath(deathAnimationDuration));
     }
 
     private float GetAnimationClipDuration(string clipName)
@@ -102,7 +105,7 @@ public class EnemyHealth : MonoBehaviour
         return 0f;
     }
 
-    private IEnumerator ResetShootLayerWeightAndHandleDeath(float waitTime)
+    private IEnumerator HandleDeath(float waitTime)
     {
         float elapsedTime = 0f;
         float initialWeight = animator.GetLayerWeight(animator.GetLayerIndex("ShootingLayer"));
@@ -123,7 +126,31 @@ public class EnemyHealth : MonoBehaviour
         }
         else
         {
-            gameObject.SetActive(false);
+            // Assicurati che tutti i componenti rilevanti siano disattivati
+            if (enemyCollider != null)
+            {
+                enemyCollider.enabled = false;
+            }
+
+            if (navMeshAgent != null)
+            {
+                navMeshAgent.enabled = false;
+            }
+
+            if (enemyMovement != null)
+            {
+                enemyMovement.enabled = false;
+            }
+
+            if (enemyAttack != null)
+            {
+                enemyAttack.enabled = false;
+            }
+
+            if (enemyAnimatorController != null)
+            {
+                enemyAnimatorController.enabled = false;
+            }
         }
     }
 }

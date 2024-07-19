@@ -1,4 +1,3 @@
-// File: EnemyAnimatorController.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +26,9 @@ public class EnemyAnimatorController : MonoBehaviour
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        player = enemyMovement.player;
+        player = GameObject.FindWithTag("Player").transform;
+        enemyMovement.player = player;
+        enemyAttack.player = player;
         currentShootWeight = 0f;
         targetShootWeight = 0f;
     }

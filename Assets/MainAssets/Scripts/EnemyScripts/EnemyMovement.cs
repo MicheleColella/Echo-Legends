@@ -1,4 +1,3 @@
-// File: EnemyMovement.cs
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
@@ -56,6 +55,8 @@ public class EnemyMovement : MonoBehaviour
             debugStateText.SetActive(debugActive);
             debugVisibilityText.SetActive(debugActive);
         }
+
+        AssignPlayer();
     }
 
     void Update()
@@ -71,6 +72,8 @@ public class EnemyMovement : MonoBehaviour
             Debug.Log("Enemy is in Dying state");
             return; // Non fare nulla se lo stato ? Dying
         }
+
+        AssignPlayer();
 
         switch (currentState)
         {
@@ -127,6 +130,8 @@ public class EnemyMovement : MonoBehaviour
     {
         if (Time.time > destinationStartTime + maxTimeToReachDestination)
         {
+            AssignPlayer();
+
             switch (currentState)
             {
                 case EnemyState.Patrolling:
@@ -151,6 +156,8 @@ public class EnemyMovement : MonoBehaviour
 
     public void Patrol()
     {
+        AssignPlayer();
+
         if (Vector3.Distance(transform.position, patrolTarget) < 1f || patrolTarget == Vector3.zero)
         {
             SetRandomPatrolTarget();
@@ -173,6 +180,8 @@ public class EnemyMovement : MonoBehaviour
 
     public void ChasePlayer()
     {
+        AssignPlayer();
+
         if (Time.time > chaseStartTime + chaseDuration)
         {
             StartSearching();
@@ -206,6 +215,8 @@ public class EnemyMovement : MonoBehaviour
 
     public void SearchPlayer()
     {
+        AssignPlayer();
+
         if (Time.time > searchStartTime + searchDuration)
         {
             StartPatrolling();
@@ -237,6 +248,8 @@ public class EnemyMovement : MonoBehaviour
 
     void LookAtPlayer()
     {
+        AssignPlayer();
+
         Vector3 direction = (player.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookSpeed);
@@ -244,6 +257,8 @@ public class EnemyMovement : MonoBehaviour
 
     public void ActiveMove()
     {
+        AssignPlayer();
+
         if (Time.time > nextActiveMoveTime)
         {
             if (Random.value < 0.5f)
@@ -272,6 +287,8 @@ public class EnemyMovement : MonoBehaviour
 
     public void Retreat()
     {
+        AssignPlayer();
+
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
         if (distanceToPlayer >= retreatDistance)
@@ -288,6 +305,8 @@ public class EnemyMovement : MonoBehaviour
     [Button]
     public void Dodge()
     {
+        AssignPlayer();
+
         if (!disableLogic && Random.value <= dodgeProbability)
         {
             Vector3 dodgeDirection = Vector3.Cross(Vector3.up, (player.position - transform.position)).normalized;
@@ -330,6 +349,8 @@ public class EnemyMovement : MonoBehaviour
 
     public bool CanSeePlayer()
     {
+        AssignPlayer();
+
         RaycastHit hit;
         if (Physics.Linecast(transform.position, player.position, out hit, obstacleLayer))
         {
@@ -343,6 +364,8 @@ public class EnemyMovement : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        AssignPlayer();
+
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, patrolRadius);
 
@@ -367,6 +390,8 @@ public class EnemyMovement : MonoBehaviour
 
     void Strafe()
     {
+        AssignPlayer();
+
         Vector3 strafeDirection = Vector3.Cross(Vector3.up, (player.position - transform.position)).normalized;
         agent.SetDestination(transform.position + strafeDirection * strafeDistance);
         destinationStartTime = Time.time;
@@ -374,8 +399,22 @@ public class EnemyMovement : MonoBehaviour
 
     public void LookAtDestination()
     {
+        AssignPlayer();
+
         Vector3 direction = (agent.destination - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookSpeed);
+    }
+
+    private void AssignPlayer()
+    {
+        if (player == null)
+        {
+            GameObject playerObject = GameObject.FindWithTag("Player");
+            if (playerObject != null)
+            {
+                player = playerObject.transform;
+            }
+        }
     }
 }
