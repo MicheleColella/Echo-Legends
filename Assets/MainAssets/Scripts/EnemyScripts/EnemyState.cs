@@ -7,5 +7,6 @@ public enum EnemyState
     Dodging,
     Retreating,
     Searching,
-    Idle
+    Idle,
+    Dying // Nuovo stato aggiunto
 }

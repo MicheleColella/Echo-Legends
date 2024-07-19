@@ -60,7 +60,17 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        if (disableLogic) return;
+        if (disableLogic)
+        {
+            Debug.Log("Logic is disabled");
+            return;
+        }
+
+        if (currentState == EnemyState.Dying)
+        {
+            Debug.Log("Enemy is in Dying state");
+            return; // Non fare nulla se lo stato ? Dying
+        }
 
         switch (currentState)
         {

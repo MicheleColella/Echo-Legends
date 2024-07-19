@@ -16,8 +16,9 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
-        if (enemyMovement.disableLogic)
+        if (enemyMovement.disableLogic || enemyMovement.currentState == EnemyState.Dying)
         {
+            Debug.Log("Enemy is in Dying state or logic is disabled");
             return;
         }
 
@@ -76,11 +77,11 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-
     void OnTriggerEnter(Collider other)
     {
-        if (enemyMovement.disableLogic)
+        if (enemyMovement.disableLogic || enemyMovement.currentState == EnemyState.Dying)
         {
+            Debug.Log("Enemy is in Dying state or logic is disabled");
             return;
         }
 
