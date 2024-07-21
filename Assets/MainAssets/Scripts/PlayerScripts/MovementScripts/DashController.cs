@@ -143,6 +143,12 @@ namespace KinematicCharacterController.Examples
                 return; // Non eseguire il dash se il giocatore è fermo
             }
 
+            // Verifica se la stamina è sufficiente per il dash
+            if (currentStamina <= 0)
+            {
+                return; // Non eseguire il dash se la stamina è a 0
+            }
+
             if (canDash && characterMotor.GroundingStatus.IsStableOnGround)
             {
                 float dashFactor = 1f;
@@ -159,8 +165,8 @@ namespace KinematicCharacterController.Examples
                 canDash = false;
                 IsDashing = true; // Set the property to true when dashing
 
-                // Imposta i parametri dell'Animator
-                if (playerAnimator != null)
+                // Imposta i parametri dell'Animator solo se c'è abbastanza stamina
+                if (playerAnimator != null && currentStamina > 0)
                 {
                     playerAnimator.SetBool("isDashing", true);
                     playerAnimator.SetFloat("DashDirection", GetAnimatorDashDirection(dashDirection));
@@ -176,11 +182,13 @@ namespace KinematicCharacterController.Examples
                     StopCoroutine(dashCoroutine);
                 }
 
-                dashCoroutine = StartCoroutine(PerformDash(dashVector));
+                dashCoroutine = StartCoroutine(PerformDash(dashVector, currentStamina > 0));
                 rechargeCoroutine = StartCoroutine(RechargeStamina());
                 StartCoroutine(DashCooldown());
             }
         }
+
+
 
         private Vector3 GetDashDirection()
         {
@@ -206,11 +214,14 @@ namespace KinematicCharacterController.Examples
             }
         }
 
-        private IEnumerator PerformDash(Vector3 dashVector)
+        private IEnumerator PerformDash(Vector3 dashVector, bool hasStamina)
         {
-            // Inizia il dash disabilitando le collisioni con il layer EnemyProjectile
-            Physics.IgnoreLayerCollision(gameObject.layer, enemyProjectileLayer, true);
-            healthSystem.SetInvulnerable(true); // Rendi il giocatore invulnerabile ai danni
+            if (hasStamina)
+            {
+                // Inizia il dash disabilitando le collisioni con il layer EnemyProjectile
+                Physics.IgnoreLayerCollision(gameObject.layer, enemyProjectileLayer, true);
+                healthSystem.SetInvulnerable(true); // Rendi il giocatore invulnerabile ai danni
+            }
 
             float elapsedTime = 0f;
             Vector3 initialVelocity = characterMotor.BaseVelocity;
@@ -243,10 +254,14 @@ namespace KinematicCharacterController.Examples
                 playerAnimator.SetBool("isDashing", false);
             }
 
-            // Termina il dash riabilitando le collisioni con il layer EnemyProjectile
-            Physics.IgnoreLayerCollision(gameObject.layer, enemyProjectileLayer, false);
-            healthSystem.SetInvulnerable(false); // Rendi il giocatore vulnerabile ai danni
+            if (hasStamina)
+            {
+                // Termina il dash riabilitando le collisioni con il layer EnemyProjectile
+                Physics.IgnoreLayerCollision(gameObject.layer, enemyProjectileLayer, false);
+                healthSystem.SetInvulnerable(false); // Rendi il giocatore vulnerabile ai danni
+            }
         }
+
 
         private IEnumerator DashCooldown()
         {

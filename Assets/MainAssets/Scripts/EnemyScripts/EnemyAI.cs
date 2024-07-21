@@ -19,7 +19,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (enemyMovement.disableLogic || enemyMovement.currentState == EnemyState.Dying)
         {
-            Debug.Log("Enemy is in Dying state or logic is disabled");
+            //Debug.Log("Enemy is in Dying state or logic is disabled");
             return;
         }
 

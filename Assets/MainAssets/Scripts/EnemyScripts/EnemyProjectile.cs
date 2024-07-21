@@ -59,7 +59,7 @@ public class EnemyProjectile : MonoBehaviour, IDespawnedPoolObject, IRetrievedPo
         }
         else
         {
-            Debug.Log("Projectile hit something else.");
+            //Debug.Log("Projectile hit something else.");
             Despawn();
         }
     }
