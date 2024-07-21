@@ -5,7 +5,6 @@ public class EnemyHealth : MonoBehaviour
 {
     [Header("Health Settings")]
     public int maxHealth = 100;
-
     [SerializeField]
     private int currentHealth;
 
@@ -24,6 +23,13 @@ public class EnemyHealth : MonoBehaviour
     public bool destroyAfterDeath = true;
     public string deathAnimationName = "Dam_StandDie"; // Nome dell'animazione di morte
 
+    [Header("Damage Flash Settings")]
+    public Material damageFlashMaterial;
+    public float flashDuration = 0.1f;
+
+    private Renderer[] childRenderers;
+    private Material[][] originalMaterials;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -36,6 +42,14 @@ public class EnemyHealth : MonoBehaviour
 
         enemyMovement.player = GameObject.FindWithTag("Player").transform;
         enemyAttack.player = enemyMovement.player;
+
+        childRenderers = GetComponentsInChildren<Renderer>();
+        originalMaterials = new Material[childRenderers.Length][];
+
+        for (int i = 0; i < childRenderers.Length; i++)
+        {
+            originalMaterials[i] = childRenderers[i].materials;
+        }
     }
 
     public void TakeDamage(int damage)
@@ -43,9 +57,39 @@ public class EnemyHealth : MonoBehaviour
         if (isDying) return;
 
         currentHealth -= damage;
+        StartCoroutine(DamageFlash());
+
         if (currentHealth <= 0)
         {
             Die();
+        }
+    }
+
+    private IEnumerator DamageFlash()
+    {
+        SetMaterial(damageFlashMaterial);
+        yield return new WaitForSeconds(flashDuration);
+        ResetMaterial();
+    }
+
+    private void SetMaterial(Material material)
+    {
+        foreach (var renderer in childRenderers)
+        {
+            Material[] materials = new Material[renderer.materials.Length];
+            for (int i = 0; i < materials.Length; i++)
+            {
+                materials[i] = material;
+            }
+            renderer.materials = materials;
+        }
+    }
+
+    private void ResetMaterial()
+    {
+        for (int i = 0; i < childRenderers.Length; i++)
+        {
+            childRenderers[i].materials = originalMaterials[i];
         }
     }
 
@@ -54,14 +98,12 @@ public class EnemyHealth : MonoBehaviour
         if (isDying) return;
 
         isDying = true;
-        //Debug.Log("Enemy is dying");
 
         if (dropSystem != null)
         {
             dropSystem.DropItems();
         }
 
-        // Set enemy state to Dying
         if (enemyMovement != null)
         {
             enemyMovement.currentState = EnemyState.Dying;
@@ -87,7 +129,6 @@ public class EnemyHealth : MonoBehaviour
         animator.SetTrigger("Die");
         float deathAnimationDuration = GetAnimationClipDuration(deathAnimationName);
 
-        // Start coroutine to reset shoot layer weight and handle object after death
         StartCoroutine(HandleDeath(deathAnimationDuration));
     }
 
@@ -126,7 +167,6 @@ public class EnemyHealth : MonoBehaviour
         }
         else
         {
-            // Assicurati che tutti i componenti rilevanti siano disattivati
             if (enemyCollider != null)
             {
                 enemyCollider.enabled = false;

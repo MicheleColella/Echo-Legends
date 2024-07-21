@@ -419,7 +419,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -0.83453107, y: 0, z: -0.84003943, w: 0}
+  m_margin: {x: -0.8181455, y: 0, z: -0.7120813, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -651,6 +651,8 @@ MonoBehaviour:
   animator: {fileID: 2214091751583686406}
   destroyAfterDeath: 1
   deathAnimationName: Dam_StandDie_RootMod
+  damageFlashMaterial: {fileID: 2100000, guid: 4a57a0bfad83d4242ba09ba309b416c9, type: 2}
+  flashDuration: 0.1
 --- !u!114 &134507102764340529
 MonoBehaviour:
   m_ObjectHideFlags: 0
